@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - Smart Pizzeria</title>
+    <link rel="stylesheet" href="../../public/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1>Smart Pizzeria</h1>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.php?url=home">Accueil</a></li>
+                <li><a href="index.php?url=menu">Menu</a></li>
+                <li><a href="index.php?url=composer">Composer votre pizza</a></li>
+                <li><a href="index.php?url=cart">Panier</a></li>
+                <li><a href="index.php?url=profile" class="active">Profil</a></li>
+                <li><a href="index.php?url=auth/logout">Déconnexion</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="container">
+            <h1>Mon Profil</h1>
+            <p>Gérez vos informations et vos commandes</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="success-message">
+                    <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="error-message">
+                    <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+                </div>
+            <?php endif; ?>
+
+            <div class="profile-container">
+                <!-- Informations personnelles -->
+                <div class="profile-section">
+                    <h2>Mes Informations</h2>
+                    
+                    <form id="profile-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="first_name">Prénom</label>
+                                <input type="text" id="first_name" name="first_name" value="<?php echo $user_info['first_name']; ?>" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="last_name">Nom</label>
+                                <input type="text" id="last_name" name="last_name" value="<?php echo $user_info['last_name']; ?>" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" value="<?php echo $user_info['email']; ?>" disabled>
+                            <small>L'email ne peut pas être modifié</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address">Adresse</label>
+                            <textarea id="address" name="address" rows="3"><?php echo $user_info['address'] ?? ''; ?></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Téléphone</label>
+                            <input type="tel" id="phone" name="phone" value="<?php echo $user_info['phone'] ?? ''; ?>">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+                    </form>
+                </div>
+
+                <!-- Historique des commandes -->
+                <div class="profile-section">
+                    <h2>Historique des Commandes</h2>
+                    
+                    <?php if (empty($orders)): ?>
+                        <div class="empty-orders">
+                            <p>Vous n'avez pas encore passé de commande.</p>
+                            <a href="index.php?url=menu" class="btn btn-primary">Passer une commande</a>
+                        </div>
+                    <?php else: ?>
+                        <div class="orders-list">
+                            <?php foreach ($orders as $order): ?>
+                                <div class="order-card">
+                                    <div class="order-header">
+                                        <div class="order-info">
+                                            <h3>Commande #<?php echo $order['id']; ?></h3>
+                                            <p class="order-date"><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></p>
+                                        </div>
+                                        <div class="order-status">
+                                            <span class="status-badge status-<?php echo $order['status']; ?>">
+                                                <?php 
+                                                $status_labels = [
+                                                    'pending' => 'En attente',
+                                                    'preparing' => 'En préparation',
+                                                    'ready' => 'Prête',
+                                                    'delivered' => 'Livrée',
+                                                    'cancelled' => 'Annulée'
+                                                ];
+                                                echo $status_labels[$order['status']] ?? 'Inconnu';
+                                                ?>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="order-details">
+                                        <div class="order-summary">
+                                            <p><strong><?php echo $order['item_count']; ?></strong> article(s)</p>
+                                            <p><strong>Total:</strong> <?php echo number_format($order['total_amount'], 2); ?> €</p>
+                                        </div>
+                                        
+                                        <div class="order-actions">
+                                            <a href="index.php?url=profile/orderDetails/<?php echo $order['id']; ?>" class="btn btn-secondary">Voir les détails</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Smart Pizzeria</h3>
+                    <p>Votre pizzeria de confiance avec des pizzas personnalisées.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Liens utiles</h4>
+                    <ul>
+                        <li><a href="index.php?url=menu">Menu</a></li>
+                        <li><a href="index.php?url=composer">Composer votre pizza</a></li>
+                        <li><a href="index.php?url=contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Téléphone: 01 23 45 67 89</p>
+                    <p>Email: contact@smartpizzeria.fr</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Smart Pizzeria. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('profile-form');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                const data = {};
+                
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+                
+                // Désactiver le bouton pendant le traitement
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Mise à jour...';
+                
+                fetch('index.php?url=profile/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Afficher un message de succès
+                        const successDiv = document.createElement('div');
+                        successDiv.className = 'success-message';
+                        successDiv.textContent = data.message;
+                        form.parentNode.insertBefore(successDiv, form);
+                        
+                        // Supprimer le message après 3 secondes
+                        setTimeout(() => {
+                            successDiv.remove();
+                        }, 3000);
+                    } else {
+                        // Afficher un message d'erreur
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'error-message';
+                        errorDiv.textContent = data.error;
+                        form.parentNode.insertBefore(errorDiv, form);
+                        
+                        setTimeout(() => {
+                            errorDiv.remove();
+                        }, 3000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Erreur lors de la mise à jour du profil');
+                })
+                .finally(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Mettre à jour';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

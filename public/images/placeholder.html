@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Créer images placeholder</title>
+</head>
+<body>
+    <canvas id="canvas" width="300" height="200" style="display:none;"></canvas>
+    
+    <script>
+        // Fonction pour créer et télécharger une image placeholder
+        function createPlaceholder(name, color, filename) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Fond
+            ctx.fillStyle = color;
+            ctx.fillRect(0, 0, 300, 200);
+            
+            // Cercle pour simuler une pizza
+            ctx.beginPath();
+            ctx.arc(150, 100, 70, 0, 2 * Math.PI);
+            ctx.fillStyle = '#FFD700';
+            ctx.fill();
+            ctx.strokeStyle = '#8B4513';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            // Texte
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(name, 150, 105);
+            
+            // Télécharger
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+        
+        // Créer toutes les images
+        const pizzas = [
+            { name: 'Margherita', color: '#FF6B6B', file: 'margherita.jpg' },
+            { name: '4 Fromages', color: '#FFE66D', file: '4fromages.jpg' },
+            { name: 'Végétarienne', color: '#4ECDC4', file: 'vege.jpg' },
+            { name: 'Pepperoni', color: '#FF8C42', file: 'pepperoni.jpg' },
+            { name: 'Thon', color: '#95E1D3', file: 'thon.jpg' },
+            { name: 'Pizza Personnalisée', color: '#A8E6CF', file: 'custom_pizza.jpg' },
+            { name: 'Hero Pizza', color: '#FFB6C1', file: 'hero-pizza.jpg' },
+            { name: 'Pizza Preview', color: '#DDA0DD', file: 'pizza-preview.jpg' }
+        ];
+        
+        // Créer chaque image avec un délai
+        pizzas.forEach((pizza, index) => {
+            setTimeout(() => {
+                createPlaceholder(pizza.name, pizza.color, pizza.file);
+            }, index * 500);
+        });
+    </script>
+</body>
+</html>
