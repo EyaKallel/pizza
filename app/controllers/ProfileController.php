@@ -38,13 +38,13 @@ class ProfileController extends Controller {
             $user = $this->model('User');
             
             $user->id = $_SESSION['user_id'];
-            $user->first_name = $_POST['first_name'];
-            $user->last_name = $_POST['last_name'];
-            $user->address = $_POST['address'];
-            $user->phone = $_POST['phone'];
+            $user->prenom = $_POST['prenom'];
+            $user->nom = $_POST['nom'];
+            $user->adresse = $_POST['adresse'];
+            $user->telephone = $_POST['telephone'];
             
             if ($user->updateProfile()) {
-                $_SESSION['first_name'] = $user->first_name;
+                $_SESSION['prenom'] = $user->prenom;
                 echo json_encode(['success' => true, 'message' => 'Profil mis à jour avec succès']);
             } else {
                 echo json_encode(['error' => 'Erreur lors de la mise à jour du profil']);

@@ -49,16 +49,12 @@ class AdminController extends Controller {
     }
     
     public function users() {
-        $user = $this->model('User');
+        $users = $this->getAllUsers();
+        $stats = $this->getUserStats();
         
         $this->view('admin/users', [
-            'users' => [],
-            'stats' => [
-                'total_users' => 0,
-                'total_clients' => 0,
-                'blocked_users' => 0,
-                'new_users_this_month' => 0
-            ],
+            'users' => $users,
+            'stats' => $stats,
             'user_logged_in' => $this->isLoggedIn()
         ]);
     }
@@ -320,6 +316,46 @@ class AdminController extends Controller {
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         $stats['pending_orders'] = $result['pending'];
+        
+        return $stats;
+    }
+    
+    private function getAllUsers() {
+        $query = "SELECT id, nom, prenom, email, telephone, role, date_creation 
+                  FROM users 
+                  ORDER BY date_creation DESC";
+        
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    private function getUserStats() {
+        $stats = [];
+        
+        // Total des utilisateurs
+        $query = "SELECT COUNT(*) as total FROM users";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stats['total_users'] = $result['total'];
+        
+        // Total des clients
+        $query = "SELECT COUNT(*) as total FROM users WHERE role = 'client'";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stats['total_clients'] = $result['total'];
+        
+        // Nouveaux utilisateurs ce mois
+        $query = "SELECT COUNT(*) as total FROM users 
+                  WHERE MONTH(date_creation) = MONTH(CURRENT_DATE) 
+                  AND YEAR(date_creation) = YEAR(CURRENT_DATE)";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stats['new_users_this_month'] = $result['total'];
         
         return $stats;
     }

@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Commandes - Smart Pizzeria</title>
-    <link rel="stylesheet" href="/ProjetPizza2/public/css/style.css">
-    <link rel="stylesheet" href="/ProjetPizza2/public/css/admin.css">
+    <link rel="stylesheet" href="/ProjetPizza2/public/css/admin-light.css">
 </head>
 <body>
     <nav class="navbar">
@@ -29,62 +28,94 @@
             <h1>Gestion des Commandes</h1>
             <p>Consultez et modifiez le statut des commandes</p>
         </div>
-</header>
+    </header>
 
     <main>
         <div class="container">
             <div class="orders-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Commande</th>
-                            <th>Client</th>
-                            <th>Email</th>
-                            <th>Date</th>
-                            <th>Total</th>
-                            <th>Livraison</th>
-                            <th>Téléphone</th>
-                            <th>Statut</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($orders as $order): ?>
+                <div class="page-header">
+                    <h1 class="page-title">Gestion des Commandes</h1>
+                    <p class="page-description">Consultez et gérez toutes les commandes des clients</p>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Toutes les commandes</h3>
+                        <div class="table-actions">
+                            <span class="badge badge-info">
+                                <?php echo count($orders); ?> commande(s)
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td>#<?php echo $order['id']; ?></td>
-                                <td><?php echo $order['prenom'] . ' ' . $order['nom']; ?></td>
-                                <td><?php echo $order['email']; ?></td>
-                                <td><?php echo date('d/m/Y H:i', strtotime($order['date_commande'])); ?></td>
-                                <td><?php echo number_format($order['total'] ?? 0, 2); ?> €</td>
-                                <td><?php echo $order['adresse_livraison'] ?? 'Sur place'; ?></td>
-                                <td><?php echo $order['telephone']; ?></td>
-                                <td>
-                                    <span class="status-badge status-<?php echo $order['statut']; ?>">
-                                        <?php 
-                                        $status_labels = [
-                                            'en_attente' => 'En attente',
-                                            'confirmée' => 'Confirmée',
-                                            'en_livraison' => 'En livraison',
-                                            'livrée' => 'Livrée',
-                                            'annulée' => 'Annulée'
-                                        ];
-                                        echo $status_labels[$order['statut']] ?? 'Inconnu';
-                                        ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <select class="status-select" data-order-id="<?php echo $order['id']; ?>">
-                                        <option value="en_attente" <?php echo $order['statut'] == 'en_attente' ? 'selected' : ''; ?>>En attente</option>
-                                        <option value="confirmée" <?php echo $order['statut'] == 'confirmée' ? 'selected' : ''; ?>>Confirmée</option>
-                                        <option value="en_livraison" <?php echo $order['statut'] == 'en_livraison' ? 'selected' : ''; ?>>En livraison</option>
-                                        <option value="livrée" <?php echo $order['statut'] == 'livrée' ? 'selected' : ''; ?>>Livrée</option>
-                                        <option value="annulée" <?php echo $order['statut'] == 'annulée' ? 'selected' : ''; ?>>Annulée</option>
-                                    </select>
-                                </td>
+                                <th>ID</th>
+                                <th>Client</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($orders)): ?>
+                                <?php foreach ($orders as $order): ?>
+                                    <tr>
+                                        <td><strong>#<?php echo $order['id']; ?></strong></td>
+                                        <td>
+                                            <?php 
+                                            if ($order['nom'] && $order['prenom']) {
+                                                echo $order['prenom'] . ' ' . $order['nom'];
+                                            } elseif ($order['email']) {
+                                                echo $order['email'];
+                                            } else {
+                                                echo 'Client inconnu';
+                                            }
+                                            ?>
+                                        </td>
+                                        <td><?php echo date('d/m/Y H:i', strtotime($order['date_commande'])); ?></td>
+                                        <td><strong><?php echo number_format($order['total'], 2); ?> €</strong></td>
+                                        <td>
+                                            <span class="badge badge-<?php echo $order['statut'] === 'livrée' ? 'success' : ($order['statut'] === 'en_cours' ? 'warning' : ($order['statut'] === 'annulée' ? 'danger' : 'info')); ?>">
+                                                <?php 
+                                                $status_text = [
+                                                    'en_attente' => 'En attente',
+                                                    'en_cours' => 'En cours',
+                                                    'livrée' => 'Livrée',
+                                                    'annulée' => 'Annulée'
+                                                ];
+                                                echo $status_text[$order['statut']] ?? $order['statut'];
+                                                ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="table-actions">
+                                                <select class="form-select" onchange="updateStatus(<?php echo $order['id']; ?>, this.value)">
+                                                    <option value="en_attente" <?php echo $order['statut'] === 'en_attente' ? 'selected' : ''; ?>>En attente</option>
+                                                    <option value="en_cours" <?php echo $order['statut'] === 'en_cours' ? 'selected' : ''; ?>>En cours</option>
+                                                    <option value="livrée" <?php echo $order['statut'] === 'livrée' ? 'selected' : ''; ?>>Livrée</option>
+                                                    <option value="annulée" <?php echo $order['statut'] === 'annulée' ? 'selected' : ''; ?>>Annulée</option>
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 3rem;">
+                                        <div style="color: var(--text-muted);">
+                                            <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+                                            <h3>Aucune commande trouvée</h3>
+                                            <p>Les commandes apparaîtront ici dès que les clients commenceront à commander</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
@@ -96,22 +127,22 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const statusSelects = document.querySelectorAll('.status-select');
-            
-            statusSelects.forEach(select => {
-                select.addEventListener('change', function() {
-                    const orderId = this.dataset.orderId;
-                    const newStatus = this.value;
-                    
-                    if (confirm(`Changer le statut de la commande #${orderId} vers "${this.options[this.selectedIndex].text}"?`)) {
-                        fetch('/ProjetPizza2/index.php?url=admin/updateOrderStatus', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: `order_id=${orderId}&status=${newStatus}`
-                        })
+    function updateStatus(orderId, newStatus) {
+        fetch('/ProjetPizza2/index.php?url=admin/updateOrderStatus', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `order_id=${orderId}&status=${newStatus}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Afficher un message de succès
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-success';
+                alert.innerHTML = '<span>✓</span> Statut mis à jour avec succès';
+                document.querySelector('.admin-content').insertBefore(alert, document.querySelector('.admin-content').firstChild);
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {

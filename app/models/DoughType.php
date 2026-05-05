@@ -1,7 +1,6 @@
 <?php
 class DoughType {
     private $conn;
-    private $table_name = "dough_types";
 
     public $id;
     public $name;
@@ -12,22 +11,41 @@ class DoughType {
     }
 
     public function getAll() {
-        $query = "SELECT * FROM " . $this->table_name . " ORDER BY price_modifier";
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Retourner les types de pâte codés en dur car la table n'existe pas
+        return [
+            [
+                'id' => 1,
+                'name' => 'Pâte Fine',
+                'price_modifier' => 1.0
+            ],
+            [
+                'id' => 2,
+                'name' => 'Pâte Épaisse',
+                'price_modifier' => 1.2
+            ],
+            [
+                'id' => 3,
+                'name' => 'Pâte à Fromage',
+                'price_modifier' => 1.3
+            ],
+            [
+                'id' => 4,
+                'name' => 'Pâte Complète',
+                'price_modifier' => 1.1
+            ]
+        ];
     }
 
     public function getById($id) {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE id = :id";
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":id", $id);
-        $stmt->execute();
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $allDoughTypes = $this->getAll();
+        
+        foreach ($allDoughTypes as $doughType) {
+            if ($doughType['id'] == $id) {
+                return $doughType;
+            }
+        }
+        
+        return null;
     }
 }
 ?>

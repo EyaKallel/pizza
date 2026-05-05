@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Profil - Smart Pizzeria</title>
-    <link rel="stylesheet" href="../../public/css/style.css">
+    <link rel="stylesheet" href="/ProjetPizza2/public/css/modern-pizza.css">
 </head>
 <body>
     <nav class="navbar">
@@ -13,12 +13,12 @@
                 <h1>Smart Pizzeria</h1>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.php?url=home">Accueil</a></li>
-                <li><a href="index.php?url=menu">Menu</a></li>
-                <li><a href="index.php?url=composer">Composer votre pizza</a></li>
-                <li><a href="index.php?url=cart">Panier</a></li>
-                <li><a href="index.php?url=profile" class="active">Profil</a></li>
-                <li><a href="index.php?url=auth/logout">Déconnexion</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=home">Accueil</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=menu">Menu</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=composer">Composer votre pizza</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=cart">Panier</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=profile" class="active">Profil</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=auth/logout">Déconnexion</a></li>
             </ul>
         </div>
     </nav>
@@ -52,30 +52,30 @@
                     <form id="profile-form">
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="first_name">Prénom</label>
-                                <input type="text" id="first_name" name="first_name" value="<?php echo $user_info['first_name']; ?>" required>
+                                <label for="prenom">Prénom</label>
+                                <input type="text" id="prenom" name="prenom" value="<?php echo isset($user_info['prenom']) ? htmlspecialchars($user_info['prenom']) : ''; ?>" required>
                             </div>
                             
                             <div class="form-group">
-                                <label for="last_name">Nom</label>
-                                <input type="text" id="last_name" name="last_name" value="<?php echo $user_info['last_name']; ?>" required>
+                                <label for="nom">Nom</label>
+                                <input type="text" id="nom" name="nom" value="<?php echo isset($user_info['nom']) ? htmlspecialchars($user_info['nom']) : ''; ?>" required>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" value="<?php echo $user_info['email']; ?>" disabled>
+                            <input type="email" id="email" value="<?php echo isset($user_info['email']) ? htmlspecialchars($user_info['email']) : ''; ?>" disabled>
                             <small>L'email ne peut pas être modifié</small>
                         </div>
 
                         <div class="form-group">
-                            <label for="address">Adresse</label>
-                            <textarea id="address" name="address" rows="3"><?php echo $user_info['address'] ?? ''; ?></textarea>
+                            <label for="adresse">Adresse</label>
+                            <textarea id="adresse" name="adresse" rows="3"><?php echo isset($user_info['adresse']) ? htmlspecialchars($user_info['adresse']) : ''; ?></textarea>
                         </div>
 
                         <div class="form-group">
-                            <label for="phone">Téléphone</label>
-                            <input type="tel" id="phone" name="phone" value="<?php echo $user_info['phone'] ?? ''; ?>">
+                            <label for="telephone">Téléphone</label>
+                            <input type="tel" id="telephone" name="telephone" value="<?php echo isset($user_info['telephone']) ? htmlspecialchars($user_info['telephone']) : ''; ?>">
                         </div>
 
                         <button type="submit" class="btn btn-primary">Mettre à jour</button>
@@ -89,7 +89,7 @@
                     <?php if (empty($orders)): ?>
                         <div class="empty-orders">
                             <p>Vous n'avez pas encore passé de commande.</p>
-                            <a href="index.php?url=menu" class="btn btn-primary">Passer une commande</a>
+                            <a href="/ProjetPizza2/index.php?url=menu" class="btn btn-primary">Passer une commande</a>
                         </div>
                     <?php else: ?>
                         <div class="orders-list">
@@ -98,19 +98,19 @@
                                     <div class="order-header">
                                         <div class="order-info">
                                             <h3>Commande #<?php echo $order['id']; ?></h3>
-                                            <p class="order-date"><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></p>
+                                            <p class="order-date"><?php echo date('d/m/Y H:i', strtotime($order['date_commande'])); ?></p>
                                         </div>
                                         <div class="order-status">
-                                            <span class="status-badge status-<?php echo $order['status']; ?>">
+                                            <span class="status-badge status-<?php echo $order['statut']; ?>">
                                                 <?php 
                                                 $status_labels = [
-                                                    'pending' => 'En attente',
-                                                    'preparing' => 'En préparation',
-                                                    'ready' => 'Prête',
-                                                    'delivered' => 'Livrée',
-                                                    'cancelled' => 'Annulée'
+                                                    'en_attente' => 'En attente',
+                                                    'en_cours' => 'En cours',
+                                                    'prete' => 'Prête',
+                                                    'livrée' => 'Livrée',
+                                                    'annulée' => 'Annulée'
                                                 ];
-                                                echo $status_labels[$order['status']] ?? 'Inconnu';
+                                                echo $status_labels[$order['statut']] ?? 'Inconnu';
                                                 ?>
                                             </span>
                                         </div>
@@ -119,11 +119,11 @@
                                     <div class="order-details">
                                         <div class="order-summary">
                                             <p><strong><?php echo $order['item_count']; ?></strong> article(s)</p>
-                                            <p><strong>Total:</strong> <?php echo number_format($order['total_amount'], 2); ?> €</p>
+                                            <p><strong>Total:</strong> <?php echo number_format($order['total'], 2); ?> €</p>
                                         </div>
                                         
                                         <div class="order-actions">
-                                            <a href="index.php?url=profile/orderDetails/<?php echo $order['id']; ?>" class="btn btn-secondary">Voir les détails</a>
+                                            <a href="/ProjetPizza2/index.php?url=profile/orderDetails/<?php echo $order['id']; ?>" class="btn btn-secondary">Voir les détails</a>
                                         </div>
                                     </div>
                                 </div>
@@ -181,7 +181,7 @@
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Mise à jour...';
                 
-                fetch('index.php?url=profile/update', {
+                fetch('/ProjetPizza2/index.php?url=profile/update', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',

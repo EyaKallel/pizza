@@ -2,13 +2,18 @@
 class HomeController extends Controller {
     
     public function index() {
-        $product = $this->model('Product');
-        $featured_products = $product->getFeatured();
+        // Si l'utilisateur est déjà connecté, le rediriger selon son rôle
+        if ($this->isLoggedIn()) {
+            if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+                $this->redirect('admin');
+            } else {
+                $this->redirect('menu');
+            }
+            return;
+        }
         
-        $this->view('home/index', [
-            'featured_products' => $featured_products,
-            'user_logged_in' => $this->isLoggedIn()
-        ]);
+        // Sinon, afficher la page de login comme page d'accueil
+        $this->view('auth/login');
     }
 }
 ?>
