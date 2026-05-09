@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détails de la Commande - Smart Pizzeria</title>
-    <link rel="stylesheet" href="../../public/css/style.css">
+    <title>Détails de la commande — Smart Pizzeria</title>
+    <link rel="stylesheet" href="/ProjetPizza2/public/css/modern-pizza.css">
+    <link rel="stylesheet" href="/ProjetPizza2/public/css/client-site.css">
 </head>
 <body>
     <nav class="navbar">
@@ -13,12 +14,12 @@
                 <h1>Smart Pizzeria</h1>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.php?url=home">Accueil</a></li>
-                <li><a href="index.php?url=menu">Menu</a></li>
-                <li><a href="index.php?url=composer">Composer votre pizza</a></li>
-                <li><a href="index.php?url=cart">Panier</a></li>
-                <li><a href="index.php?url=profile" class="active">Profil</a></li>
-                <li><a href="index.php?url=auth/logout">Déconnexion</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=home">Accueil</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=menu">Menu</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=composer">Composer votre pizza</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=cart">Panier</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=profile" class="active">Profil</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=auth/logout">Déconnexion</a></li>
             </ul>
         </div>
     </nav>
@@ -104,14 +105,17 @@
                         <?php endforeach; ?>
                     </div>
                     
+                    <?php 
+                    $subtotal = $order_details['total_amount'] - $order_details['delivery_fee'];
+                    ?>
                     <div class="order-total">
                         <div class="total-line">
                             <span>Sous-total:</span>
-                            <span><?php echo number_format($order_details['total_amount'], 2); ?> €</span>
+                            <span><?php echo number_format($subtotal, 2); ?> €</span>
                         </div>
                         <div class="total-line">
                             <span>Livraison:</span>
-                            <span>Gratuite</span>
+                            <span><?php echo $order_details['delivery_fee'] > 0 ? number_format($order_details['delivery_fee'], 2) . ' €' : 'Gratuite'; ?></span>
                         </div>
                         <div class="total-line final-total">
                             <span>Total:</span>
@@ -123,8 +127,8 @@
                 <!-- Actions -->
                 <div class="order-actions-section">
                     <div class="action-buttons">
-                        <a href="index.php?url=profile" class="btn btn-secondary">← Retour au profil</a>
-                        <a href="index.php?url=menu" class="btn btn-primary">Passer une nouvelle commande</a>
+                        <a href="/ProjetPizza2/index.php?url=profile" class="btn btn-secondary">← Retour au profil</a>
+                        <a href="/ProjetPizza2/index.php?url=menu" class="btn btn-primary">Passer une nouvelle commande</a>
                     </div>
                 </div>
             </div>
@@ -141,9 +145,9 @@
                 <div class="footer-section">
                     <h4>Liens utiles</h4>
                     <ul>
-                        <li><a href="index.php?url=menu">Menu</a></li>
-                        <li><a href="index.php?url=composer">Composer votre pizza</a></li>
-                        <li><a href="index.php?url=contact">Contact</a></li>
+                        <li><a href="/ProjetPizza2/index.php?url=menu">Menu</a></li>
+                        <li><a href="/ProjetPizza2/index.php?url=composer">Composer votre pizza</a></li>
+                        <li><a href="/ProjetPizza2/index.php?url=cart">Panier</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -153,7 +157,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Smart Pizzeria. Tous droits réservés.</p>
+                <p>&copy; <?php echo date('Y'); ?> Smart Pizzeria</p>
             </div>
         </div>
     </footer>

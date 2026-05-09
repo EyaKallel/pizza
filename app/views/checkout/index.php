@@ -4,7 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Finaliser la commande - Smart Pizzeria</title>
+    <?php
+    $checkoutWebBase = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+    $checkoutProcessUrl = ($checkoutWebBase === '' ? '' : $checkoutWebBase) . '/index.php?url=checkout/process';
+    $checkoutSuccessPrefix = ($checkoutWebBase === '' ? '' : $checkoutWebBase) . '/index.php?url=checkout/success/';
+    ?>
     <link rel="stylesheet" href="/ProjetPizza2/public/css/modern-pizza.css">
+    <link rel="stylesheet" href="/ProjetPizza2/public/css/client-site.css">
     <style>
         .checkout-container {
             max-width: 1200px;
@@ -266,7 +272,7 @@
                 <li><a href="/ProjetPizza2/index.php?url=home">Accueil</a></li>
                 <li><a href="/ProjetPizza2/index.php?url=menu">Menu</a></li>
                 <li><a href="/ProjetPizza2/index.php?url=composer">Composer votre pizza</a></li>
-                <li><a href="/ProjetPizza2/index.php?url=cart" class="active">Panier</a></li>
+                <li><a href="/ProjetPizza2/index.php?url=cart">Panier</a></li>
                 <li><a href="/ProjetPizza2/index.php?url=profile">Profil</a></li>
                 <li><a href="/ProjetPizza2/index.php?url=auth/logout">Déconnexion</a></li>
             </ul>
@@ -390,65 +396,154 @@
                     </button>
                 </div>
             </div>
-                <p>&copy; 2024 Smart Pizzeria. Tous droits réservés.</p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Smart Pizzeria</h3>
+                    <p>Finalisation de commande sécurisée.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Liens</h4>
+                    <ul>
+                        <li><a href="/ProjetPizza2/index.php?url=menu">Menu</a></li>
+                        <li><a href="/ProjetPizza2/index.php?url=cart">Panier</a></li>
+                        <li><a href="/ProjetPizza2/index.php?url=profile">Profil</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Téléphone : 01 23 45 67 89</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <?php echo date('Y'); ?> Smart Pizzeria</p>
             </div>
         </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('checkout-form');
+        const CHECKOUT_PROCESS_URL = <?php echo json_encode($checkoutProcessUrl, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+        const CHECKOUT_SUCCESS_PREFIX = <?php echo json_encode($checkoutSuccessPrefix, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+        const defaultUserPhone = <?php echo json_encode(isset($user_info['telephone']) ? $user_info['telephone'] : '', JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+
+        let deliveryMode = null;
+        const BASE_SUBTOTAL = <?php echo number_format($total, 2, '.', ''); ?>;
+        const DELIVERY_FEE = 3.50;
+
+        function updateSummary() {
+            const deliveryFee = (deliveryMode === 'delivery') ? DELIVERY_FEE : 0;
+            const total = BASE_SUBTOTAL + deliveryFee;
             
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                const formData = new FormData(form);
-                const data = {};
-                
-                for (let [key, value] of formData.entries()) {
-                    data[key] = value;
-                }
-                
-                // Validation simple
-                if (!data.delivery_address || !data.phone) {
-                    alert('Veuillez remplir tous les champs obligatoires');
+            document.getElementById('delivery-fees').innerHTML = 
+                '<span>Frais de livraison:</span><span>' + deliveryFee.toFixed(2) + ' €</span>';
+            document.getElementById('total-price').textContent = total.toFixed(2) + ' €';
+        }
+
+        function selectDeliveryOption(mode) {
+            deliveryMode = mode;
+            document.querySelectorAll('#delivery-option, #pickup-option').forEach(function (el) {
+                el.classList.remove('selected');
+            });
+            var deliveryForm = document.getElementById('delivery-form');
+            var pickupInfo = document.getElementById('pickup-info');
+            var confirmBtn = document.getElementById('confirm-btn');
+
+            if (mode === 'delivery') {
+                document.getElementById('delivery-option').classList.add('selected');
+                deliveryForm.style.display = 'block';
+                pickupInfo.style.display = 'none';
+                confirmBtn.disabled = false;
+            } else {
+                document.getElementById('pickup-option').classList.add('selected');
+                deliveryForm.style.display = 'none';
+                pickupInfo.style.display = 'block';
+                confirmBtn.disabled = false;
+            }
+            updateSummary();
+        }
+
+        function confirmOrder() {
+            var btn = document.getElementById('confirm-btn');
+            var delivery_address = '';
+            var phone = '';
+            var instructions = '';
+
+            if (deliveryMode === 'delivery') {
+                var form = document.getElementById('checkout-form');
+                delivery_address = form.delivery_address.value.trim();
+                phone = form.phone.value.trim();
+                instructions = form.instructions ? form.instructions.value.trim() : '';
+                if (!delivery_address || !phone) {
+                    alert('Veuillez remplir l\'adresse et le téléphone.');
                     return;
                 }
-                
-                if (!data.confirm) {
-                    alert('Veuillez confirmer votre commande');
+            } else if (deliveryMode === 'pickup') {
+                delivery_address = 'Retrait sur place — Smart Pizzeria, 123 Avenue des Pizzas, 75001 Paris';
+                phone = (defaultUserPhone || '').trim();
+                if (!phone) {
+                    phone = window.prompt('Numéro de téléphone pour votre commande :') || '';
+                }
+                if (!phone) {
                     return;
                 }
-                
-                // Désactiver le bouton pendant le traitement
-                const submitBtn = form.querySelector('button[type="submit"]');
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Traitement en cours...';
-                
-                fetch('index.php?url=checkout/process', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams(data)
+            } else {
+                alert('Choisissez la livraison ou le retrait sur place.');
+                return;
+            }
+
+            btn.disabled = true;
+            var body = new URLSearchParams();
+            body.set('delivery_address', delivery_address);
+            body.set('phone', phone);
+            body.set('instructions', instructions);
+            body.set('type_livraison', deliveryMode === 'pickup' ? 'sur_place' : 'livraison');
+
+            fetch(CHECKOUT_PROCESS_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+                body: body
+            })
+                .then(function (r) {
+                    return r.text().then(function (text) {
+                        var data;
+                        try {
+                            data = JSON.parse(text);
+                        } catch (e) {
+                            console.error('Réponse serveur:', text);
+                            throw new Error('Le serveur n\'a pas renvoyé du JSON (vérifiez la base de données et les erreurs PHP).');
+                        }
+                        if (!r.ok) {
+                            throw new Error(data.error || ('HTTP ' + r.status));
+                        }
+                        return data;
+                    });
                 })
-                .then(response => response.json())
-                .then(data => {
+                .then(function (data) {
                     if (data.success) {
-                        window.location.href = 'index.php?url=checkout/success/' + data.order_id;
+                        window.location.href = CHECKOUT_SUCCESS_PREFIX + data.order_id;
                     } else {
                         alert(data.error || 'Erreur lors du traitement de la commande');
-                        submitBtn.disabled = false;
-                        submitBtn.textContent = 'Confirmer la commande';
+                        btn.disabled = false;
                     }
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Erreur lors du traitement de la commande');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Confirmer la commande';
+                .catch(function (err) {
+                    alert(err.message || 'Erreur réseau');
+                    btn.disabled = false;
                 });
-            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.getElementById('checkout-form');
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    confirmOrder();
+                });
+            }
         });
     </script>
 </body>

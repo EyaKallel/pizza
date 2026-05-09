@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Composer votre pizza - Smart Pizzeria Tunisie</title>
-    <link rel="stylesheet" href="/ProjetPizza2/public/css/professional.css">
+    <title>Composer votre pizza — Smart Pizzeria</title>
+    <link rel="stylesheet" href="/ProjetPizza2/public/css/modern-pizza.css">
+    <link rel="stylesheet" href="/ProjetPizza2/public/css/client-site.css">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
-                <h1>🍕 Smart Pizzeria Tunisie</h1>
+                <h1>Smart Pizzeria</h1>
             </div>
             <ul class="nav-menu">
                 <li><a href="/ProjetPizza2/index.php?url=home">Accueil</a></li>
@@ -38,7 +39,7 @@
     </section>
 
     <!-- Contenu Principal -->
-    <main class="container">
+    <main class="container composer-page-main">
         <div class="grid grid-2">
             <!-- Formulaire -->
             <div>
@@ -51,24 +52,24 @@
                         </h2>
                         <div class="size-options">
                             <div class="size-option">
-                                <input type="radio" name="size_id" id="size_small" value="small" data-multiplier="1" style="display: none;">
+                                <input type="radio" name="size_id" id="size_small" value="S" data-multiplier="1" style="display: none;">
                                 <label for="size_small" style="cursor: pointer; display: block;">
                                     <div class="size-name">Petite</div>
-                                    <div class="size-price">12.00 TND</div>
+                                    <div class="size-price">5.00 TND</div>
                                 </label>
                             </div>
                             <div class="size-option">
-                                <input type="radio" name="size_id" id="size_medium" value="medium" data-multiplier="1.3" style="display: none;">
+                                <input type="radio" name="size_id" id="size_medium" value="M" data-multiplier="1.3" style="display: none;">
                                 <label for="size_medium" style="cursor: pointer; display: block;">
                                     <div class="size-name">Moyenne</div>
-                                    <div class="size-price">15.50 TND</div>
+                                    <div class="size-price">6.50 TND</div>
                                 </label>
                             </div>
                             <div class="size-option">
-                                <input type="radio" name="size_id" id="size_large" value="large" data-multiplier="1.6" style="display: none;">
+                                <input type="radio" name="size_id" id="size_large" value="L" data-multiplier="1.6" style="display: none;">
                                 <label for="size_large" style="cursor: pointer; display: block;">
                                     <div class="size-name">Grande</div>
-                                    <div class="size-price">19.00 TND</div>
+                                    <div class="size-price">8.00 TND</div>
                                 </label>
                             </div>
                         </div>
@@ -82,31 +83,31 @@
                         </h2>
                         <div class="grid grid-2">
                             <div class="card">
-                                <input type="radio" name="dough_id" id="dough_classic" value="1" data-price="0" style="display: none;">
-                                <label for="dough_classic" style="cursor: pointer; display: block;">
-                                    <div style="font-weight: 600; color: var(--text-dark);">Classique</div>
-                                    <div style="color: var(--accent-color); font-weight: 600;">0.00 TND</div>
-                                </label>
-                            </div>
-                            <div class="card">
-                                <input type="radio" name="dough_id" id="dough_fine" value="2" data-price="0" style="display: none;">
+                                <input type="radio" name="dough_id" id="dough_fine" value="1" data-price="1.0" style="display: none;">
                                 <label for="dough_fine" style="cursor: pointer; display: block;">
-                                    <div style="font-weight: 600; color: var(--text-dark);">Fine</div>
-                                    <div style="color: var(--accent-color); font-weight: 600;">0.00 TND</div>
+                                    <div style="font-weight: 600; color: var(--text-dark);">Pâte Fine</div>
+                                    <div style="color: var(--accent-color); font-weight: 600;">+1.00 TND</div>
                                 </label>
                             </div>
                             <div class="card">
-                                <input type="radio" name="dough_id" id="dough_thick" value="3" data-price="3.30" style="display: none;">
+                                <input type="radio" name="dough_id" id="dough_thick" value="2" data-price="1.2" style="display: none;">
                                 <label for="dough_thick" style="cursor: pointer; display: block;">
-                                    <div style="font-weight: 600; color: var(--text-dark);">Épaisse</div>
-                                    <div style="color: var(--accent-color); font-weight: 600;">+3.30 TND</div>
+                                    <div style="font-weight: 600; color: var(--text-dark);">Pâte Épaisse</div>
+                                    <div style="color: var(--accent-color); font-weight: 600;">+1.20 TND</div>
                                 </label>
                             </div>
                             <div class="card">
-                                <input type="radio" name="dough_id" id="dough_cheese" value="4" data-price="8.20" style="display: none;">
+                                <input type="radio" name="dough_id" id="dough_cheese" value="3" data-price="1.3" style="display: none;">
                                 <label for="dough_cheese" style="cursor: pointer; display: block;">
-                                    <div style="font-weight: 600; color: var(--text-dark);">Fromage farci</div>
-                                    <div style="color: var(--accent-color); font-weight: 600;">+8.20 TND</div>
+                                    <div style="font-weight: 600; color: var(--text-dark);">Pâte à Fromage</div>
+                                    <div style="color: var(--accent-color); font-weight: 600;">+1.30 TND</div>
+                                </label>
+                            </div>
+                            <div class="card">
+                                <input type="radio" name="dough_id" id="dough_complete" value="4" data-price="1.1" style="display: none;">
+                                <label for="dough_complete" style="cursor: pointer; display: block;">
+                                    <div style="font-weight: 600; color: var(--text-dark);">Pâte Complète</div>
+                                    <div style="color: var(--accent-color); font-weight: 600;">+1.10 TND</div>
                                 </label>
                             </div>
                         </div>
@@ -179,7 +180,7 @@
                             <span id="total-price">12.00 TND</span>
                         </div>
                     </div>
-                    <button class="btn btn-primary" style="width: 100%; margin-top: 1.5rem;" onclick="alert('Pizza ajoutée au panier!')">
+                    <button class="btn btn-primary" id="add-to-cart-btn" style="width: 100%; margin-top: 1.5rem;">
                         🛒 Ajouter au panier
                     </button>
                 </div>
@@ -192,7 +193,7 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>🍕 Smart Pizzeria Tunisie</h3>
+                    <h3>Smart Pizzeria</h3>
                     <p>Votre pizzeria de confiance avec des pizzas personnalisées</p>
                     <p><strong>Téléphone:</strong> 74 000 000</p>
                     <p><strong>Email:</strong> contact@smartpizzeria.tn</p>
@@ -213,7 +214,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Smart Pizzeria Tunisie - Tous droits réservés</p>
+                <p>&copy; <?php echo date('Y'); ?> Smart Pizzeria</p>
             </div>
         </div>
     </footer>
@@ -250,8 +251,47 @@
             // Gestion de la quantité
             document.querySelector('select[name="quantity"]').addEventListener('change', updatePreview);
 
+            // Gestion du bouton Ajouter au panier
+            document.getElementById('add-to-cart-btn').addEventListener('click', addToCart);
+
+            function addToCart() {
+                const sizeInput = document.querySelector('input[name="size_id"]:checked');
+                const doughInput = document.querySelector('input[name="dough_id"]:checked');
+                
+                if (!sizeInput) {
+                    alert('Veuillez sélectionner une taille');
+                    return;
+                }
+                if (!doughInput) {
+                    alert('Veuillez sélectionner un type de pâte');
+                    return;
+                }
+
+                const formData = new FormData(document.getElementById('pizza-composer-form'));
+                
+                fetch('/ProjetPizza2/index.php?url=composer/addToCart', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Pizza ajoutée au panier!');
+                        window.location.href = '/ProjetPizza2/index.php?url=cart';
+                    } else if (data.error) {
+                        alert(data.error);
+                    } else {
+                        alert('Erreur lors de l\'ajout au panier');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Erreur lors de l\'ajout au panier');
+                });
+            }
+
             function updatePreview() {
-                let basePrice = 12.00; // Prix de base en TND
+                let basePrice = 5.00; // Prix de base en TND
                 let totalPrice = basePrice;
                 let selectedSize = 'Non sélectionnée';
                 let selectedDough = 'Non sélectionnée';
@@ -291,6 +331,9 @@
                 document.getElementById('preview-ingredients').textContent = ingredientNames.length > 0 ? ingredientNames.join(', ') : 'Aucun';
                 document.getElementById('total-price').textContent = totalPrice.toFixed(2) + ' TND';
             }
+            
+            // Prix de base = 5.00 TND
+            updatePreview();
         });
     </script>
 </body>

@@ -10,7 +10,8 @@ class MenuController extends Controller {
         
         $products_by_category = [];
         foreach ($categories as $cat) {
-            $products_by_category[$cat['id']] = $product->getByCategory($cat['id']);
+            $cid = (int) $cat['id'];
+            $products_by_category[$cid] = $product->getByCategory($cid);
         }
         
         $this->view('menu/index', [

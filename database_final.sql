@@ -55,6 +55,8 @@ CREATE TABLE commandes (
     telephone VARCHAR(20) NOT NULL,
     note_client TEXT,
     statut ENUM('en_attente','confirmée','en_livraison','livrée','annulée') DEFAULT 'en_attente',
+    total DECIMAL(10,2) DEFAULT 0.00,
+    frais_livraison DECIMAL(8,2) DEFAULT 0.00,
     date_commande DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
@@ -65,6 +67,7 @@ CREATE TABLE commande_details (
     produit_id INT,
     taille ENUM('S', 'M', 'L') NOT NULL,
     quantite INT NOT NULL DEFAULT 1,
+    prix_unitaire DECIMAL(8,2) DEFAULT 0.00,
     est_personnalisee TINYINT(1) DEFAULT 0,
     FOREIGN KEY (commande_id) REFERENCES commandes(id),
     FOREIGN KEY (produit_id) REFERENCES produits(id)

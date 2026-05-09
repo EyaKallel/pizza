@@ -17,6 +17,33 @@ class Product {
         $this->conn = $db;
     }
 
+    /**
+     * Base europe (database_final.sql) : prix_s, prix_m, prix_l
+     * Base Tunisie (database_tunisia.sql) : prix_small, prix_medium, prix_large
+     */
+    private function normalizePrices(?array $row): ?array {
+        if ($row === null || $row === false) {
+            return null;
+        }
+        $hasEuro = isset($row['prix_s']) && $row['prix_s'] !== '' && $row['prix_s'] !== null;
+        if (!$hasEuro && isset($row['prix_small'])) {
+            $row['prix_s'] = $row['prix_small'];
+            $row['prix_m'] = $row['prix_medium'] ?? null;
+            $row['prix_l'] = $row['prix_large'] ?? null;
+        }
+        return $row;
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $rows
+     * @return array<int, array<string, mixed>>
+     */
+    private function normalizeRows(array $rows): array {
+        return array_map(function ($r) {
+            return $this->normalizePrices($r);
+        }, $rows);
+    }
+
     public function getAll() {
         $query = "SELECT p.*, c.nom as category_name 
                   FROM " . $this->table_name . " p
@@ -27,7 +54,7 @@ class Product {
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->normalizeRows($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
     public function getById($id) {
@@ -40,7 +67,7 @@ class Product {
         $stmt->bindParam(":id", $id);
         $stmt->execute();
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $this->normalizePrices($stmt->fetch(PDO::FETCH_ASSOC));
     }
 
     public function getByCategory($category_id) {
@@ -54,7 +81,7 @@ class Product {
         $stmt->bindParam(":category_id", $category_id);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->normalizeRows($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
     public function getFeatured() {
@@ -68,29 +95,24 @@ class Product {
         $stmt = $this->conn->prepare($query);
         $stmt->execute();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->normalizeRows($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
     public function getPriceBySize($product_id, $size) {
-        $query = "SELECT prix_s, prix_m, prix_l 
-                  FROM " . $this->table_name . " 
-                  WHERE id = :id AND disponible = 1";
-
-        $stmt = $this->conn->prepare($query);
-        $stmt->bindParam(":id", $product_id);
-        $stmt->execute();
-
-        $product = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if ($product) {
-            switch ($size) {
-                case 'S': return $product['prix_s'];
-                case 'M': return $product['prix_m'];
-                case 'L': return $product['prix_l'];
-                default: return $product['prix_m'];
-            }
+        $product = $this->getById($product_id);
+        if (!$product || !isset($product['prix_s'])) {
+            return 0;
         }
-        return 0;
+        switch ($size) {
+            case 'S':
+                return $product['prix_s'];
+            case 'M':
+                return $product['prix_m'];
+            case 'L':
+                return $product['prix_l'];
+            default:
+                return $product['prix_m'];
+        }
     }
 }
 ?>

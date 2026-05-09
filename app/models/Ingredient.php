@@ -21,6 +21,16 @@ class Ingredient {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Utilisé côté admin: afficher aussi les ingrédients indisponibles
+    public function getAllAdmin() {
+        $query = "SELECT * FROM " . $this->table_name . " ORDER BY nom";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getById($id) {
         $query = "SELECT * FROM " . $this->table_name . " WHERE id = :id";
 

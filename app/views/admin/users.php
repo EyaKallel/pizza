@@ -1,59 +1,31 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Utilisateurs - Smart Pizzeria</title>
-    <link rel="stylesheet" href="/ProjetPizza2/public/css/admin-light.css">
-</head>
-<body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <h1>Smart Pizzeria - Admin</h1>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="/ProjetPizza2/index.php?url=admin/orders">Commandes</a></li>
-                <li><a href="/ProjetPizza2/index.php?url=admin/products">Produits</a></li>
-                <li><a href="/ProjetPizza2/index.php?url=admin/ingredients">Ingrédients</a></li>
-                <li><a href="/ProjetPizza2/index.php?url=admin/users" class="active">Utilisateurs</a></li>
-                <li><a href="/ProjetPizza2/index.php?url=home">Voir le site</a></li>
-                <li><a href="/ProjetPizza2/index.php?url=auth/logout">Déconnexion</a></li>
-            </ul>
-        </div>
-    </nav>
+<?php ob_start(); ?>
+ <div class="page-header">
+     <h1 class="page-title">Gestion des Utilisateurs</h1>
+     <p class="page-description">Voyez tous les clients, gérez les comptes et consultez les historiques</p>
+ </div>
 
-    <header class="admin-header">
-        <div class="container">
-            <h1>👤 Gestion des Utilisateurs</h1>
-            <p>Voyez tous les clients, gérez les comptes et consultez les historiques</p>
-        </div>
-    </header>
+ <!-- Filtres et recherche -->
+ <div class="filters-section">
+     <div class="filter-controls">
+         <input type="text" id="search-users" placeholder="🔍 Rechercher par nom, email..." class="search-input">
+         <select id="role-filter" class="filter-select">
+             <option value="">Tous les rôles</option>
+             <option value="admin">Admin</option>
+             <option value="client">Client</option>
+         </select>
+         <select id="status-filter" class="filter-select">
+             <option value="">Tous les statuts</option>
+             <option value="active">Actifs</option>
+             <option value="blocked">Bloqués</option>
+         </select>
+         <button id="refresh-users" class="btn btn-secondary">🔄 Actualiser</button>
+     </div>
+ </div>
 
-    <main>
-        <div class="container">
-            <!-- Filtres et recherche -->
-            <div class="filters-section">
-                <div class="filter-controls">
-                    <input type="text" id="search-users" placeholder="🔍 Rechercher par nom, email..." class="search-input">
-                    <select id="role-filter" class="filter-select">
-                        <option value="">Tous les rôles</option>
-                        <option value="admin">Admin</option>
-                        <option value="client">Client</option>
-                    </select>
-                    <select id="status-filter" class="filter-select">
-                        <option value="">Tous les statuts</option>
-                        <option value="active">Actifs</option>
-                        <option value="blocked">Bloqués</option>
-                    </select>
-                    <button id="refresh-users" class="btn btn-secondary">🔄 Actualiser</button>
-                </div>
-            </div>
-
-            <!-- Tableau des utilisateurs -->
-            <div class="users-table">
-                <h2>📋 Liste des utilisateurs</h2>
-                <table>
+ <!-- Tableau des utilisateurs -->
+ <div class="users-table">
+     <h2>📋 Liste des utilisateurs</h2>
+     <table>
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -140,44 +112,42 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
-            </div>
+ </div>
 
-            <!-- Statistiques des utilisateurs -->
-            <div class="stats-section">
-                <h2>📊 Statistiques des utilisateurs</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">👥</div>
-                        <div class="stat-info">
-                            <h3><?php echo $stats['total_users'] ?? 0; ?></h3>
-                            <p>Total des utilisateurs</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">👤</div>
-                        <div class="stat-info">
-                            <h3><?php echo $stats['total_clients'] ?? 0; ?></h3>
-                            <p>Clients actifs</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">🚫</div>
-                        <div class="stat-info">
-                            <h3><?php echo $stats['blocked_users'] ?? 0; ?></h3>
-                            <p>Utilisateurs bloqués</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">📈</div>
-                        <div class="stat-info">
-                            <h3><?php echo $stats['new_users_this_month'] ?? 0; ?></h3>
-                            <p>Nouveaux ce mois</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
+ <!-- Statistiques des utilisateurs -->
+ <div class="stats-section">
+     <h2>📊 Statistiques des utilisateurs</h2>
+     <div class="stats-grid">
+         <div class="stat-card">
+             <div class="stat-icon">👥</div>
+             <div class="stat-info">
+                 <h3><?php echo $stats['total_users'] ?? 0; ?></h3>
+                 <p>Total des utilisateurs</p>
+             </div>
+         </div>
+         <div class="stat-card">
+             <div class="stat-icon">👤</div>
+             <div class="stat-info">
+                 <h3><?php echo $stats['total_clients'] ?? 0; ?></h3>
+                 <p>Clients actifs</p>
+             </div>
+         </div>
+         <div class="stat-card">
+             <div class="stat-icon">🚫</div>
+             <div class="stat-info">
+                 <h3><?php echo $stats['blocked_users'] ?? 0; ?></h3>
+                 <p>Utilisateurs bloqués</p>
+             </div>
+         </div>
+         <div class="stat-card">
+             <div class="stat-icon">📈</div>
+             <div class="stat-info">
+                 <h3><?php echo $stats['new_users_this_month'] ?? 0; ?></h3>
+                 <p>Nouveaux ce mois</p>
+             </div>
+         </div>
+     </div>
+ </div>
 
     <!-- Modal pour voir les commandes d'un utilisateur -->
     <div id="orders-modal" class="modal" style="display: none;">
@@ -192,13 +162,7 @@
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2024 Smart Pizzeria - Panneau d'administration</p>
-        </div>
-    </footer>
-
-    <script>
+ <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Recherche d'utilisateurs
             const searchInput = document.getElementById('search-users');
@@ -357,214 +321,12 @@
                 location.reload();
             });
         });
-    </script>
+ </script>
 
-    <style>
-        .filters-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .filter-controls {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .search-input, .filter-select {
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .search-input {
-            flex: 1;
-            min-width: 200px;
-        }
-
-        .filter-select {
-            min-width: 150px;
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .user-info small {
-            color: #666;
-            font-size: 12px;
-        }
-
-        .email-link {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .email-link:hover {
-            text-decoration: underline;
-        }
-
-        .role-badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .role-admin {
-            background: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .role-client {
-            background: #e8f5e8;
-            color: #388e3c;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-            flex-wrap: wrap;
-        }
-
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 12px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-info {
-            background: #17a2b8;
-            color: white;
-        }
-
-        .btn-warning {
-            background: #ffc107;
-            color: #212529;
-        }
-
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .orders-link {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .orders-link:hover {
-            text-decoration: underline;
-        }
-
-        .stats-section {
-            margin-top: 40px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .modal {
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 0;
-            border-radius: 8px;
-            width: 80%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .close-modal {
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            color: #aaa;
-        }
-
-        .close-modal:hover {
-            color: #000;
-        }
-
-        .orders-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .order-item {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .order-date {
-            color: #666;
-            font-size: 14px;
-        }
-
-        .order-details {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .order-details p {
-            margin: 0;
-        }
-    </style>
-</body>
-</html>
+<?php
+$content = ob_get_clean();
+$title = 'Gestion des Utilisateurs';
+$page_title = 'Utilisateurs';
+$active_page = 'users';
+require __DIR__ . '/layout.php';
+?>

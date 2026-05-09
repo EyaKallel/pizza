@@ -42,10 +42,134 @@ class AdminController extends Controller {
     }
     
     public function ingredients() {
+        $ingredient = $this->model('Ingredient');
+        $ingredients = $ingredient->getAllAdmin();
+
         $this->view('admin/ingredients', [
-            'ingredients' => [],
+            'ingredients' => $ingredients,
             'user_logged_in' => $this->isLoggedIn()
         ]);
+    }
+
+    public function addIngredient() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            try {
+                $nom = trim($_POST['nom'] ?? '');
+                $prix_supplementaire = isset($_POST['prix_supplementaire']) ? (float)$_POST['prix_supplementaire'] : 0.00;
+                $disponible = isset($_POST['disponible']) ? (int)$_POST['disponible'] : 1;
+
+                if ($nom === '') {
+                    throw new Exception("Le nom de l'ingrédient est requis");
+                }
+
+                $database = new Database();
+                $db = $database->getConnection();
+
+                $query = "INSERT INTO ingredients (nom, prix_supplementaire, disponible)
+                          VALUES (:nom, :prix_supplementaire, :disponible)";
+                $stmt = $db->prepare($query);
+                $stmt->bindParam(':nom', $nom);
+                $stmt->bindParam(':prix_supplementaire', $prix_supplementaire);
+                $stmt->bindParam(':disponible', $disponible);
+
+                if ($stmt->execute()) {
+                    echo json_encode(['success' => true, 'message' => 'Ingrédient ajouté avec succès']);
+                } else {
+                    echo json_encode(['success' => false, 'error' => "Erreur lors de l'ajout de l'ingrédient"]);
+                }
+            } catch (Exception $e) {
+                echo json_encode(['success' => false, 'error' => 'Erreur: ' . $e->getMessage()]);
+            }
+        }
+        exit;
+    }
+
+    public function updateIngredient() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            try {
+                $ingredient_id = isset($_POST['ingredient_id']) ? (int)$_POST['ingredient_id'] : 0;
+                $nom = trim($_POST['nom'] ?? '');
+                $prix_supplementaire = isset($_POST['prix_supplementaire']) ? (float)$_POST['prix_supplementaire'] : 0.00;
+                $disponible = isset($_POST['disponible']) ? (int)$_POST['disponible'] : 1;
+
+                if ($ingredient_id <= 0) {
+                    throw new Exception("ID ingrédient invalide");
+                }
+                if ($nom === '') {
+                    throw new Exception("Le nom de l'ingrédient est requis");
+                }
+
+                $database = new Database();
+                $db = $database->getConnection();
+
+                $query = "UPDATE ingredients
+                          SET nom = :nom,
+                              prix_supplementaire = :prix_supplementaire,
+                              disponible = :disponible
+                          WHERE id = :id";
+                $stmt = $db->prepare($query);
+                $stmt->bindParam(':nom', $nom);
+                $stmt->bindParam(':prix_supplementaire', $prix_supplementaire);
+                $stmt->bindParam(':disponible', $disponible);
+                $stmt->bindParam(':id', $ingredient_id);
+
+                if ($stmt->execute()) {
+                    echo json_encode(['success' => true, 'message' => 'Ingrédient mis à jour avec succès']);
+                } else {
+                    echo json_encode(['success' => false, 'error' => "Erreur lors de la mise à jour de l'ingrédient"]);
+                }
+            } catch (Exception $e) {
+                echo json_encode(['success' => false, 'error' => 'Erreur: ' . $e->getMessage()]);
+            }
+        }
+        exit;
+    }
+
+    public function deleteIngredient() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            try {
+                $ingredient_id = isset($_POST['ingredient_id']) ? (int)$_POST['ingredient_id'] : 0;
+                if ($ingredient_id <= 0) {
+                    throw new Exception("ID ingrédient invalide");
+                }
+
+                $database = new Database();
+                $db = $database->getConnection();
+
+                // Dépendances potentielles (selon la version de BD du projet)
+                $tablesToClean = ['custom_pizza_ingredients', 'pizza_personnalisee_ingredients'];
+                foreach ($tablesToClean as $tableName) {
+                    $checkQuery = "SELECT COUNT(*) AS cnt
+                                   FROM information_schema.tables
+                                   WHERE table_schema = DATABASE() AND table_name = :table_name";
+                    $checkStmt = $db->prepare($checkQuery);
+                    $checkStmt->bindParam(':table_name', $tableName);
+                    $checkStmt->execute();
+                    $exists = (int)$checkStmt->fetch(PDO::FETCH_ASSOC)['cnt'] > 0;
+
+                    if ($exists) {
+                        // Nettoyage des lignes liées à l'ingrédient
+                        $delQuery = "DELETE FROM {$tableName} WHERE ingredient_id = :ingredient_id";
+                        $delStmt = $db->prepare($delQuery);
+                        $delStmt->bindParam(':ingredient_id', $ingredient_id);
+                        $delStmt->execute();
+                    }
+                }
+
+                $query = "DELETE FROM ingredients WHERE id = :id";
+                $stmt = $db->prepare($query);
+                $stmt->bindParam(':id', $ingredient_id);
+
+                if ($stmt->execute()) {
+                    echo json_encode(['success' => true, 'message' => 'Ingrédient supprimé avec succès']);
+                } else {
+                    echo json_encode(['success' => false, 'error' => "Erreur lors de la suppression de l'ingrédient"]);
+                }
+            } catch (Exception $e) {
+                echo json_encode(['success' => false, 'error' => 'Erreur: ' . $e->getMessage()]);
+            }
+        }
+        exit;
     }
     
     public function users() {

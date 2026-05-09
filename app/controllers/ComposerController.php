@@ -51,7 +51,7 @@ class ComposerController extends Controller {
             }
             
             foreach ($selected_ingredients as $ing) {
-                $total_price += $ing['price'];
+                $total_price += $ing['prix_supplementaire'];
             }
             
             echo json_encode(['price' => number_format($total_price, 2)]);
@@ -92,7 +92,7 @@ class ComposerController extends Controller {
             }
             
             foreach ($selected_ingredients as $ing) {
-                $total_price += $ing['price'];
+                $total_price += $ing['prix_supplementaire'];
             }
             
             // Création de la pizza personnalisée

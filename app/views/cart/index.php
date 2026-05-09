@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panier - Smart Pizzeria</title>
-    <link rel="stylesheet" href="/ProjetPizza2/public/css/style.css">
+    <title>Panier — Smart Pizzeria</title>
+    <link rel="stylesheet" href="/ProjetPizza2/public/css/modern-pizza.css">
+    <link rel="stylesheet" href="/ProjetPizza2/public/css/client-site.css">
 </head>
 <body>
     <nav class="navbar">
@@ -17,8 +18,13 @@
                 <li><a href="/ProjetPizza2/index.php?url=menu">Menu</a></li>
                 <li><a href="/ProjetPizza2/index.php?url=composer">Composer votre pizza</a></li>
                 <li><a href="/ProjetPizza2/index.php?url=cart" class="active">Panier</a></li>
-                <li><a href="/ProjetPizza2/index.php?url=profile">Profil</a></li>
-                <li><a href="/ProjetPizza2/index.php?url=auth/logout">Déconnexion</a></li>
+                <?php if ($user_logged_in): ?>
+                    <li><a href="/ProjetPizza2/index.php?url=profile">Profil</a></li>
+                    <li><a href="/ProjetPizza2/index.php?url=auth/logout">Déconnexion</a></li>
+                <?php else: ?>
+                    <li><a href="/ProjetPizza2/index.php?url=auth/login">Connexion</a></li>
+                    <li><a href="/ProjetPizza2/index.php?url=auth/register">Inscription</a></li>
+                <?php endif; ?>
             </ul>
         </div>
     </nav>
@@ -166,7 +172,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Smart Pizzeria. Tous droits réservés.</p>
+                <p>&copy; <?php echo date('Y'); ?> Smart Pizzeria</p>
             </div>
         </div>
     </footer>
@@ -179,7 +185,7 @@
                 formData.append('item_id', itemId);
                 formData.append('quantity', newQuantity);
 
-                fetch('index.php?url=cart/update', {
+                fetch('/ProjetPizza2/index.php?url=cart/update', {
                     method: 'POST',
                     body: formData
                 })
@@ -248,7 +254,7 @@
                         const formData = new FormData();
                         formData.append('item_id', itemId);
 
-                        fetch('index.php?url=cart/remove', {
+                        fetch('/ProjetPizza2/index.php?url=cart/remove', {
                             method: 'POST',
                             body: formData
                         })
@@ -272,7 +278,7 @@
             // Vider le panier
             document.getElementById('clear-cart').addEventListener('click', function() {
                 if (confirm('Êtes-vous sûr de vouloir vider votre panier ?')) {
-                    window.location.href = 'index.php?url=cart/clear';
+                    window.location.href = '/ProjetPizza2/index.php?url=cart/clear';
                 }
             });
         });

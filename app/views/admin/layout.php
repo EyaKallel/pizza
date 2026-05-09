@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0c1222">
     <title><?php echo $title ?? 'Administration'; ?> - Smart Pizzeria</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/ProjetPizza2/public/css/admin-professional.css">
 </head>
-<body>
+<body class="admin-body-wow">
     <div class="admin-layout">
         <!-- Sidebar -->
         <aside class="admin-sidebar">
             <div class="admin-header">
                 <h1>Smart Pizzeria</h1>
+                <p class="admin-subtitle">Espace administration</p>
             </div>
             <nav class="admin-nav">
                 <ul>
@@ -27,8 +32,9 @@
         <main class="admin-main">
             <!-- Top Bar -->
             <header class="admin-topbar">
-                <div>
+                <div class="topbar-title-wrap">
                     <h2 class="page-title"><?php echo $page_title ?? 'Administration'; ?></h2>
+                    <p class="topbar-subtitle">Gestion complète de la pizzeria</p>
                 </div>
                 <div class="admin-user-info">
                     <span>Bonjour, <?php echo $_SESSION['prenom'] ?? 'Admin'; ?></span>
