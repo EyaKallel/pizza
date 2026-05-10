@@ -44,34 +44,30 @@ class User {
         return false;
     }
 
-    public function login() {
-        $query = "SELECT id, nom, prenom, email, mot_de_passe, telephone, adresse, role 
-                  FROM " . $this->table_name . " 
-                  WHERE email = :email LIMIT 1";
-
-        $stmt = $this->conn->prepare($query);
-        $this->email = htmlspecialchars(strip_tags($this->email));
-        $stmt->bindParam(":email", $this->email);
-        $stmt->execute();
-
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if($row && (
-            ($this->mot_de_passe === 'admin123' && $this->email === 'admin@smartpizzaria.com') ||
-            ($this->mot_de_passe === 'client123' && $this->email === 'mohamed@gmail.com')
-        )) {
-            $this->id = $row['id'];
-            $this->nom = $row['nom'];
-            $this->prenom = $row['prenom'];
-            $this->email = $row['email'];
-            $this->telephone = $row['telephone'];
-            $this->adresse = $row['adresse'];
-            $this->role = $row['role'];
-            return true;
-        }
-        return false;
-    }
-
+   public function login() {
+    // Utiliser une requête préparée sécurisée pour éviter les problèmes d'apostrophes
+    $query = "SELECT * FROM " . $this->table_name . " 
+              WHERE email = :email LIMIT 1";
+    
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(":email", $this->email);
+    $stmt->execute();
+    
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($row && md5($this->mot_de_passe) === $row['mot_de_passe']) {
+        $this->id        = $row['id'];
+        $this->nom       = $row['nom'];
+        $this->prenom    = $row['prenom'];
+        $this->email     = $row['email'];
+        $this->telephone = $row['telephone'];
+        $this->adresse   = $row['adresse'];
+        $this->role      = $row['role'];
+        return true;
+     }
+     
+    return false;
+}
     public function emailExists() {
         $query = "SELECT id FROM " . $this->table_name . " WHERE email = :email";
         $stmt = $this->conn->prepare($query);

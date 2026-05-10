@@ -67,7 +67,7 @@
                         
                         <div class="info-item">
                             <label>Total:</label>
-                            <span class="total-amount"><?php echo number_format($order_details['total_amount'], 2); ?> €</span>
+                            <span class="total-amount"><?php echo number_format($order_details['total_amount'], 2); ?> TND</span>
                         </div>
                     </div>
                     
@@ -94,12 +94,12 @@
                                     </h4>
                                     <div class="item-quantity-price">
                                         <span class="quantity">x<?php echo $item['quantity']; ?></span>
-                                        <span class="price"><?php echo number_format($item['price'] * $item['quantity'], 2); ?> €</span>
+                                        <span class="price"><?php echo number_format($item['price'] * $item['quantity'], 2); ?> TND</span>
                                     </div>
                                 </div>
                                 
                                 <div class="item-details">
-                                    <p>Prix unitaire: <?php echo number_format($item['price'], 2); ?> €</p>
+                                    <p>Prix unitaire: <?php echo number_format($item['price'], 2); ?> TND</p>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -111,15 +111,15 @@
                     <div class="order-total">
                         <div class="total-line">
                             <span>Sous-total:</span>
-                            <span><?php echo number_format($subtotal, 2); ?> €</span>
+                            <span><?php echo number_format($subtotal, 2); ?> TND</span>
                         </div>
                         <div class="total-line">
                             <span>Livraison:</span>
-                            <span><?php echo $order_details['delivery_fee'] > 0 ? number_format($order_details['delivery_fee'], 2) . ' €' : 'Gratuite'; ?></span>
+                            <span><?php echo $order_details['delivery_fee'] > 0 ? number_format($order_details['delivery_fee'], 2) . ' TND' : 'Gratuite'; ?></span>
                         </div>
                         <div class="total-line final-total">
                             <span>Total:</span>
-                            <span><?php echo number_format($order_details['total_amount'], 2); ?> €</span>
+                            <span><?php echo number_format($order_details['total_amount'], 2); ?> TND</span>
                         </div>
                     </div>
                 </div>

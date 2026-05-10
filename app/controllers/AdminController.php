@@ -1,4 +1,9 @@
 <?php
+// Appeler Database pour démarrer les sessions automatiquement
+require_once 'config/database.php';
+$database = new Database();
+$db = $database->getConnection();
+
 class AdminController extends Controller {
     
     public function __construct() {
@@ -384,7 +389,7 @@ class AdminController extends Controller {
     }
     
     private function getAllOrders() {
-        $query = "SELECT o.*, u.nom, u.prenom, u.email
+        $query = "SELECT o.*, u.nom, u.prenom, u.email, u.telephone, u.adresse
                   FROM commandes o
                   LEFT JOIN users u ON o.user_id = u.id
                   ORDER BY o.date_commande DESC";
@@ -392,7 +397,128 @@ class AdminController extends Controller {
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         
+        $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Récupérer les détails complets pour chaque commande
+        foreach ($orders as &$order) {
+            // Calculer le total
+            if (!isset($order['total']) || $order['total'] === null) {
+                $order['total'] = $this->calculateOrderTotal($order['id']);
+            }
+            
+            // Récupérer les détails des produits
+            $order['details'] = $this->getOrderDetails($order['id']);
+            
+            // Formater le type de livraison
+            $order['type_livraison_texte'] = $this->formatDeliveryType($order['type_livraison']);
+            
+            // Formater le statut
+            $order['statut_texte'] = $this->formatOrderStatus($order['statut']);
+        }
+        
+        return $orders;
+    }
+    
+    private function getOrderDetails($order_id) {
+        $query = "SELECT cd.*, p.nom as produit_nom, p.image as produit_image,
+                          CASE 
+                              WHEN cd.est_personnalisee = 1 THEN 'Pizza Personnalisée'
+                              ELSE p.nom
+                          END as affichage_nom
+                  FROM commande_details cd
+                  LEFT JOIN produits p ON cd.produit_id = p.id
+                  WHERE cd.commande_id = :order_id";
+        
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':order_id', $order_id);
+        $stmt->execute();
+        
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    private function formatDeliveryType($type) {
+        $types = [
+            'livraison' => 'Livraison',
+            'sur_place' => 'Sur place'
+        ];
+        return $types[$type] ?? $type;
+    }
+    
+    private function formatOrderStatus($status) {
+        $statuses = [
+            'en_attente' => 'En attente',
+            'confirmée' => 'Confirmée',
+            'en_livraison' => 'En livraison',
+            'livrée' => 'Livrée',
+            'annulée' => 'Annulée'
+        ];
+        return $statuses[$status] ?? $status;
+    }
+    
+    private function calculateOrderTotal($order_id) {
+        try {
+            // Vérifier d'abord si la colonne prix_unitaire existe
+            $checkQuery = "SHOW COLUMNS FROM commande_details LIKE 'prix_unitaire'";
+            $checkStmt = $this->db->prepare($checkQuery);
+            $checkStmt->execute();
+            $columnExists = $checkStmt->rowCount() > 0;
+            
+            if ($columnExists) {
+                // Utiliser prix_unitaire si la colonne existe
+                $query = "SELECT cd.prix_unitaire, cd.quantite
+                          FROM commande_details cd
+                          WHERE cd.commande_id = :order_id";
+                
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(':order_id', $order_id);
+                $stmt->execute();
+                
+                $details = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $total = 0;
+                
+                foreach ($details as $detail) {
+                    $total += $detail['prix_unitaire'] * $detail['quantite'];
+                }
+                
+                return $total;
+            } else {
+                // Calculer le total à partir des produits si prix_unitaire n'existe pas
+                $query = "SELECT cd.produit_id, cd.taille, cd.quantite, p.prix_small, p.prix_medium, p.prix_large
+                          FROM commande_details cd
+                          LEFT JOIN produits p ON cd.produit_id = p.id
+                          WHERE cd.commande_id = :order_id";
+                
+                $stmt = $this->db->prepare($query);
+                $stmt->bindParam(':order_id', $order_id);
+                $stmt->execute();
+                
+                $details = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $total = 0;
+                
+                foreach ($details as $detail) {
+                    $price = 0;
+                    switch ($detail['taille']) {
+                        case 'S':
+                            $price = $detail['prix_small'];
+                            break;
+                        case 'M':
+                            $price = $detail['prix_medium'];
+                            break;
+                        case 'L':
+                            $price = $detail['prix_large'];
+                            break;
+                        default:
+                            $price = $detail['prix_small'];
+                    }
+                    $total += $price * $detail['quantite'];
+                }
+                
+                return $total;
+            }
+        } catch (Exception $e) {
+            // En cas d'erreur, retourner 0 pour éviter le crash
+            return 0;
+        }
     }
     
     private function getAllProducts() {
@@ -444,44 +570,45 @@ class AdminController extends Controller {
         return $stats;
     }
     
-    private function getAllUsers() {
-        $query = "SELECT id, nom, prenom, email, telephone, role, date_creation 
-                  FROM users 
-                  ORDER BY date_creation DESC";
-        
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+
     
-    private function getUserStats() {
-        $stats = [];
-        
-        // Total des utilisateurs
-        $query = "SELECT COUNT(*) as total FROM users";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $stats['total_users'] = $result['total'];
-        
-        // Total des clients
-        $query = "SELECT COUNT(*) as total FROM users WHERE role = 'client'";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $stats['total_clients'] = $result['total'];
-        
-        // Nouveaux utilisateurs ce mois
-        $query = "SELECT COUNT(*) as total FROM users 
-                  WHERE MONTH(date_creation) = MONTH(CURRENT_DATE) 
-                  AND YEAR(date_creation) = YEAR(CURRENT_DATE)";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        $stats['new_users_this_month'] = $result['total'];
-        
-        return $stats;
-    }
+   private function getAllUsers() {
+    $query = "SELECT u.id, u.nom, u.prenom, u.email, u.telephone, u.adresse,
+                     u.role, u.date_inscription,
+                     COALESCE(u.blocked, 0) as blocked,
+                     COUNT(c.id) as order_count
+              FROM users u
+              LEFT JOIN commandes c ON c.user_id = u.id
+              GROUP BY u.id
+              ORDER BY u.date_inscription DESC";
+    
+    $stmt = $this->db->prepare($query);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+private function getUserStats() {
+    $stats = [];
+
+    $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM users");
+    $stmt->execute();
+    $stats['total_users'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+
+    $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM users WHERE role = 'client'");
+    $stmt->execute();
+    $stats['total_clients'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+
+    $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM users WHERE blocked = 1");
+    $stmt->execute();
+    $stats['blocked_users'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'] ?? 0;
+
+    $stmt = $this->db->prepare("SELECT COUNT(*) as total FROM users 
+                                 WHERE MONTH(date_inscription) = MONTH(CURRENT_DATE) 
+                                 AND YEAR(date_inscription) = YEAR(CURRENT_DATE)");
+    $stmt->execute();
+    $stats['new_users_this_month'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+
+    return $stats;
+}
 }
 ?>

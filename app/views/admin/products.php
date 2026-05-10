@@ -15,17 +15,17 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="prix_s">Prix Small (€)</label>
+                            <label for="prix_s">Prix Small (TND)</label>
                             <input type="number" id="prix_s" name="prix_s" step="0.01" min="0" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="prix_m">Prix Medium (€)</label>
+                            <label for="prix_m">Prix Medium (TND)</label>
                             <input type="number" id="prix_m" name="prix_m" step="0.01" min="0" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="prix_l">Prix Large (€)</label>
+                            <label for="prix_l">Prix Large (TND)</label>
                             <input type="number" id="prix_l" name="prix_l" step="0.01" min="0" required>
                         </div>
                         

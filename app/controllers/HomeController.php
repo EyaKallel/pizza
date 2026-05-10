@@ -1,4 +1,9 @@
 <?php
+// Appeler Database pour démarrer les sessions automatiquement
+require_once 'config/database.php';
+$database = new Database();
+$db = $database->getConnection();
+
 class HomeController extends Controller {
     
     public function index() {

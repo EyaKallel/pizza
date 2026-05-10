@@ -1,4 +1,4 @@
--- Base de données Smart Pizzeria Tunisie avec prix en TND
+
 
 -- Création des tables
 CREATE TABLE users (
@@ -124,10 +124,9 @@ INSERT INTO produits (nom, description, prix_small, prix_medium, prix_large, cat
 ('Quatre Fromages', 'Sauce tomate, mozzarella, chèvre, bleu, parmesan', 18.00, 23.00, 28.00, 3),
 ('Tunisienne', 'Sauce tomate, mozzarella, merguez, poivrons, olives', 17.00, 22.00, 27.00, 3);
 
--- Compte admin (email: admin@smartpizzaria.tn, mot de passe: admin123)
+
 INSERT INTO users (nom, prenom, email, mot_de_passe, telephone, adresse, role) VALUES
 ('Admin', 'Smart', 'admin@smartpizzaria.tn', MD5('admin123'), '74000000', 'Sfax Centre', 'admin');
 
--- Compte client test (email: mohamed@gmail.com, mot de passe: client123)
-INSERT INTO users (nom, prenom, email, mot_de_passe, telephone, adresse) VALUES
-('Ben Ali', 'Mohamed', 'mohamed@gmail.com', MD5('client123'), '71234567', 'Avenue Habib Bourguiba, Sfax');
+INSERT INTO users (nom, prenom, email, mot_de_passe, telephone, adresse, role) VALUES
+('Ben Ali', 'Mohamed', 'mohamed@gmail.com', MD5('client123'), '71234567', 'Avenue Habib Bourguiba, Sfax', 'client');

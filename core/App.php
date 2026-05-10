@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 class App {
     protected $controller = 'HomeController';

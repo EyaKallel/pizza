@@ -96,9 +96,9 @@
                                         <h3><?php echo htmlspecialchars($product['nom']); ?></h3>
                                         <p class="pizza-description"><?php echo htmlspecialchars($product['description']); ?></p>
                                         <div class="menu-price-row" aria-label="Tarifs par taille">
-                                            <span class="price-chip">S <span><?php echo number_format($product['prix_s'], 2); ?> €</span></span>
-                                            <span class="price-chip">M <span><?php echo number_format($product['prix_m'], 2); ?> €</span></span>
-                                            <span class="price-chip">L <span><?php echo number_format($product['prix_l'], 2); ?> €</span></span>
+                                            <span class="price-chip">S <span><?php echo number_format($product['prix_s'], 2); ?> TND</span></span>
+                                            <span class="price-chip">M <span><?php echo number_format($product['prix_m'], 2); ?> TND</span></span>
+                                            <span class="price-chip">L <span><?php echo number_format($product['prix_l'], 2); ?> TND</span></span>
                                         </div>
 
                                         <?php if ($user_logged_in): ?>
@@ -108,9 +108,9 @@
                                                     <div class="quantity-selector">
                                                         <label for="size_<?php echo (int) $product['id']; ?>">Taille</label>
                                                         <select name="size" id="size_<?php echo (int) $product['id']; ?>">
-                                                            <option value="S">S · <?php echo number_format($product['prix_s'], 2); ?> €</option>
-                                                            <option value="M" selected>M · <?php echo number_format($product['prix_m'], 2); ?> €</option>
-                                                            <option value="L">L · <?php echo number_format($product['prix_l'], 2); ?> €</option>
+                                                            <option value="S">S · <?php echo number_format($product['prix_s'], 2); ?> TND</option>
+                                                            <option value="M" selected>M · <?php echo number_format($product['prix_m'], 2); ?> TND</option>
+                                                            <option value="L">L · <?php echo number_format($product['prix_l'], 2); ?> TND</option>
                                                         </select>
                                                     </div>
                                                     <div class="quantity-selector">

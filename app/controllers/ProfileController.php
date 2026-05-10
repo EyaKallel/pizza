@@ -1,11 +1,13 @@
 <?php
+// Appeler Database pour démarrer les sessions automatiquement
+require_once 'config/database.php';
+$database = new Database();
+$db = $database->getConnection();
+
 class ProfileController extends Controller {
     
     public function index() {
-        // Vérification améliorée de la session
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
+        // $_SESSION fonctionne déjà grâce à l'appel ci-dessus
         
         // Vérification directe au lieu de la méthode isLoggedIn()
         if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
@@ -43,6 +45,12 @@ class ProfileController extends Controller {
             $user->adresse = $_POST['adresse'];
             $user->telephone = $_POST['telephone'];
             
+            // Validation du numéro de téléphone tunisien
+            if (!empty($user->telephone) && !$this->validateTunisianPhone($user->telephone)) {
+                echo json_encode(['error' => 'Le numéro de téléphone doit contenir exactement 8 chiffres (ex: 12345678)']);
+                exit;
+            }
+            
             if ($user->updateProfile()) {
                 $_SESSION['prenom'] = $user->prenom;
                 echo json_encode(['success' => true, 'message' => 'Profil mis à jour avec succès']);
@@ -51,6 +59,14 @@ class ProfileController extends Controller {
             }
             exit;
         }
+    }
+    
+    private function validateTunisianPhone($phone) {
+        // Supprimer tous les caractères non numériques
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+        
+        // Vérifier que c'est exactement 8 chiffres
+        return strlen($phone) === 8 && ctype_digit($phone);
     }
     
     public function orderDetails($order_id) {

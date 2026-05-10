@@ -295,7 +295,7 @@
                     <div class="option-description">
                         Recevez votre commande directement chez vous en 30-45 minutes
                     </div>
-                    <div class="option-price">Frais de livraison: 3.50 €</div>
+                    <div class="option-price">Frais de livraison: 3.50 TND</div>
                 </div>
                 
                 <div class="option-card" id="pickup-option" onclick="selectDeliveryOption('pickup')">
@@ -367,7 +367,7 @@
                                 <?php endif; ?>
                             </div>
                             <div class="item-price">
-                                <?php echo number_format($item['price'] * $item['quantity'], 2); ?> €
+                                <?php echo number_format($item['price'] * $item['quantity'], 2); ?> TND
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -376,17 +376,17 @@
                 <div style="padding: 1rem 0; border-top: 1px solid var(--border-light);">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
                         <span>Sous-total:</span>
-                        <span><?php echo number_format($total, 2); ?> €</span>
+                        <span><?php echo number_format($total, 2); ?> TND</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;" id="delivery-fees">
                         <span>Frais de livraison:</span>
-                        <span>0.00 €</span>
+                        <span>0.00 TND</span>
                     </div>
                 </div>
                 
                 <div class="summary-total">
                     <span>Total:</span>
-                    <strong id="total-price"><?php echo number_format($total, 2); ?> €</strong>
+                    <strong id="total-price"><?php echo number_format($total, 2); ?> TND</strong>
                 </div>
                 
                 <div class="checkout-actions">
@@ -439,8 +439,8 @@
             const total = BASE_SUBTOTAL + deliveryFee;
             
             document.getElementById('delivery-fees').innerHTML = 
-                '<span>Frais de livraison:</span><span>' + deliveryFee.toFixed(2) + ' €</span>';
-            document.getElementById('total-price').textContent = total.toFixed(2) + ' €';
+                '<span>Frais de livraison:</span><span>' + deliveryFee.toFixed(2) + ' TND</span>';
+            document.getElementById('total-price').textContent = total.toFixed(2) + ' TND';
         }
 
         function selectDeliveryOption(mode) {

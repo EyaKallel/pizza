@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/ProjetPizza2/public/css/client-site.css">
 </head>
 <body>
+    <!-- Système d'alertes Smart Pizzeria -->
+    <script src="/ProjetPizza2/public/js/alerts.js"></script>
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -93,7 +95,7 @@
                                         </div>
                                     <?php endif; ?>
                                     
-                                    <div class="item-price">Prix unitaire: <?php echo number_format($item['price'], 2); ?> €</div>
+                                    <div class="item-price">Prix unitaire: <?php echo number_format($item['price'], 2); ?> TND</div>
                                 </div>
                                 
                                 <div class="item-quantity">
@@ -106,7 +108,7 @@
                                 </div>
                                 
                                 <div class="item-total">
-                                    <strong><?php echo number_format($item['price'] * $item['quantity'], 2); ?> €</strong>
+                                    <strong><?php echo number_format($item['price'] * $item['quantity'], 2); ?> TND</strong>
                                 </div>
                                 
                                 <div class="item-actions">
@@ -123,7 +125,7 @@
                         
                         <div class="summary-line">
                             <span>Sous-total:</span>
-                            <span id="subtotal"><?php echo number_format($total, 2); ?> €</span>
+                            <span id="subtotal"><?php echo number_format($total, 2); ?> TND</span>
                         </div>
                         
                         <div class="summary-line">
@@ -133,7 +135,7 @@
                         
                         <div class="summary-line total">
                             <span>Total:</span>
-                            <span id="cart-total"><?php echo number_format($total, 2); ?> €</span>
+                            <span id="cart-total"><?php echo number_format($total, 2); ?> TND</span>
                         </div>
                         
                         <div class="cart-actions">
@@ -193,14 +195,14 @@
                 .then(data => {
                     if (data.success) {
                         // Mettre à jour le total
-                        document.getElementById('cart-total').textContent = data.total + ' €';
-                        document.getElementById('subtotal').textContent = data.total + ' €';
+                        document.getElementById('cart-total').textContent = data.total + ' TND';
+                        document.getElementById('subtotal').textContent = data.total + ' TND';
                         
                         // Mettre à jour le total de l'article
                         const item = document.querySelector(`[data-item-id="${itemId}"]`);
-                        const price = parseFloat(item.querySelector('.item-price').textContent.replace('€', '').replace(',', '.'));
+                        const price = parseFloat(item.querySelector('.item-price').textContent.replace('TND', '').replace(',', '.'));
                         const itemTotal = item.querySelector('.item-total strong');
-                        itemTotal.textContent = (price * newQuantity).toFixed(2) + ' €';
+                        itemTotal.textContent = (price * newQuantity).toFixed(2) + ' TND';
                         
                         // Si quantité = 0, supprimer l'article
                         if (newQuantity <= 0) {
@@ -261,12 +263,14 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.success) {
+                                window.showSuccess('Article supprimé du panier');
                                 document.querySelector(`[data-item-id="${itemId}"]`).remove();
-                                document.getElementById('cart-total').textContent = data.total + ' €';
-                                document.getElementById('subtotal').textContent = data.total + ' €';
+                                document.getElementById('cart-total').textContent = data.total + ' TND';
+                                document.getElementById('subtotal').textContent = data.total + ' TND';
                                 
                                 if (data.item_count === 0) {
-                                    location.reload();
+                                    window.showInfo('Votre panier est maintenant vide');
+                                    setTimeout(() => location.reload(), 2000);
                                 }
                             }
                         })
@@ -279,6 +283,7 @@
             document.getElementById('clear-cart').addEventListener('click', function() {
                 if (confirm('Êtes-vous sûr de vouloir vider votre panier ?')) {
                     window.location.href = '/ProjetPizza2/index.php?url=cart/clear';
+                    window.showWarning('Panier vidé avec succès');
                 }
             });
         });
