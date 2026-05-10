@@ -1,4 +1,9 @@
 <?php
+// Appeler Database pour démarrer les sessions automatiquement
+require_once 'config/database.php';
+$database = new Database();
+$db = $database->getConnection();
+
 class CheckoutController extends Controller {
     
     public function index() {
@@ -67,7 +72,7 @@ class CheckoutController extends Controller {
             $subtotal += (float) $item['price'] * (int) $item['quantity'];
         }
         
-        // Frais de livraison: 3.50€ pour livraison, 0 pour retrait sur place
+        // Frais de livraison: 3.50TND pour livraison, 0 pour retrait sur place
         $delivery_fee = ($type === 'livraison') ? 3.50 : 0.00;
         $order->frais_livraison = $delivery_fee;
         $order->total_amount = $subtotal + $delivery_fee;

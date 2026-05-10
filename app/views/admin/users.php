@@ -74,7 +74,7 @@
                                             <?php echo ($user['blocked'] ?? 0) ? '🚫 Bloqué' : '✅ Actif'; ?>
                                         </span>
                                     </td>
-                                    <td><?php echo date('d/m/Y', strtotime($user['created_at'] ?? 'now')); ?></td>
+                                    <td><?php echo date('d/m/Y', strtotime($user['date_inscription'] ?? 'now')) ?></td>
                                     <td>
                                         <a href="/ProjetPizza2/index.php?url=admin/userOrders/<?php echo $user['id']; ?>" class="orders-link">
                                             <?php echo $user['order_count'] ?? 0; ?> commandes
@@ -94,10 +94,11 @@
                                                     <button class="btn btn-sm btn-success unblock-user" data-user-id="<?php echo $user['id']; ?>">
                                                         ✅ Débloquer
                                                     </button>
+                                                    <?php if (($user['blocked'] ?? 0) == 0): ?>
+                                                    <button class="btn btn-sm btn-danger delete-user" data-user-id="<?php echo $user['id']; ?>">
+                                                        ❌ Supprimer
+                                                    </button>
                                                 <?php endif; ?>
-                                                <button class="btn btn-sm btn-danger delete-user" data-user-id="<?php echo $user['id']; ?>">
-                                                    ❌ Supprimer
-                                                </button>
                                             <?php endif; ?>
                                         </div>
                                     </td>
@@ -231,7 +232,7 @@
                                                 <span class="order-date">${new Date(order.date_commande).toLocaleDateString('fr-FR')}</span>
                                             </div>
                                             <div class="order-details">
-                                                <p>Total: ${order.total ? Number(order.total).toFixed(2) + ' €' : 'N/A'}</p>
+                                                <p>Total: ${order.total ? Number(order.total).toFixed(2) + ' TND' : 'N/A'}</p>
                                                 <p>Statut: <span class="status-badge status-${order.statut}">${order.statut}</span></p>
                                             </div>
                                         </div>

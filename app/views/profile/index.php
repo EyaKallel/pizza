@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/ProjetPizza2/public/css/client-site.css">
 </head>
 <body>
+    <!-- Système d'alertes Smart Pizzeria -->
+    <script src="/ProjetPizza2/public/js/alerts.js"></script>
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -120,7 +122,7 @@
                                     <div class="order-details">
                                         <div class="order-summary">
                                             <p><strong><?php echo $order['item_count']; ?></strong> article(s)</p>
-                                            <p><strong>Total:</strong> <?php echo number_format($order['total'], 2); ?> €</p>
+                                            <p><strong>Total:</strong> <?php echo number_format($order['total'], 2); ?> TND</p>
                                         </div>
                                         
                                         <div class="order-actions">
@@ -192,9 +194,8 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Afficher un message de succès
-                        const successDiv = document.createElement('div');
-                        successDiv.className = 'success-message';
+                        // Afficher un message de succès avec le système d'alertes
+                        window.showSuccess(data.message);
                         successDiv.textContent = data.message;
                         form.parentNode.insertBefore(successDiv, form);
                         
@@ -203,9 +204,8 @@
                             successDiv.remove();
                         }, 3000);
                     } else {
-                        // Afficher un message d'erreur
-                        const errorDiv = document.createElement('div');
-                        errorDiv.className = 'error-message';
+                        // Afficher un message d'erreur avec le système d'alertes
+                        window.showError(data.error);
                         errorDiv.textContent = data.error;
                         form.parentNode.insertBefore(errorDiv, form);
                         

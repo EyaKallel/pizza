@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="/ProjetPizza2/public/css/modern-pizza.css">
 </head>
 <body>
+    <!-- Système d'alertes Smart Pizzeria -->
+    <script src="/ProjetPizza2/public/js/alerts.js"></script>
     <section class="welcome-section">
         <div class="welcome-container">
             <div class="welcome-info">
@@ -67,5 +69,22 @@
             </div>
         </div>
     </section>
+    
+    <!-- Alertes système -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Récupérer les alertes depuis la session
+        <?php 
+        if (isset($_SESSION['alerts']) && !empty($_SESSION['alerts'])) {
+            foreach ($_SESSION['alerts'] as $alert): 
+        ?>
+                window.showAlert('<?php echo addslashes($alert['message']); ?>', '<?php echo $alert['type']; ?>', 5000);
+        <?php 
+            endforeach;
+            unset($_SESSION['alerts']); // Vider après affichage
+        }
+        ?>
+    });
+    </script>
 </body>
 </html>

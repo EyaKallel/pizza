@@ -80,15 +80,15 @@
                     ?>
                     <div class="detail-row">
                         <span>Sous-total:</span>
-                        <span><?php echo number_format($subtotal, 2); ?> €</span>
+                        <span><?php echo number_format($subtotal, 2); ?> TND</span>
                     </div>
                     <div class="detail-row">
                         <span>Frais de livraison:</span>
-                        <span><?php echo $order_details['delivery_fee'] > 0 ? number_format($order_details['delivery_fee'], 2) . ' €' : 'Gratuit'; ?></span>
+                        <span><?php echo $order_details['delivery_fee'] > 0 ? number_format($order_details['delivery_fee'], 2) . ' TND' : 'Gratuit'; ?></span>
                     </div>
                     <div class="detail-row">
                         <span>Total:</span>
-                        <span class="total-amount"><?php echo number_format($order_details['total_amount'], 2); ?> €</span>
+                        <span class="total-amount"><?php echo number_format($order_details['total_amount'], 2); ?> TND</span>
                     </div>
                 </div>
 
@@ -107,7 +107,7 @@
                                 <?php endif; ?>
                             </div>
                             <div class="item-price">
-                                <?php echo number_format($item['price'] * $item['quantity'], 2); ?> €
+                                <?php echo number_format($item['price'] * $item['quantity'], 2); ?> TND
                             </div>
                         </div>
                     <?php endforeach; ?>

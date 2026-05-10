@@ -1,3 +1,9 @@
+<?php
+// Appeler Database pour démarrer les sessions automatiquement
+require_once 'config/database.php';
+$database = new Database();
+$db = $database->getConnection();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -8,6 +14,8 @@
     <link rel="stylesheet" href="/ProjetPizza2/public/css/client-site.css">
 </head>
 <body>
+    <!-- Système d'alertes Smart Pizzeria -->
+    <script src="/ProjetPizza2/public/js/alerts.js"></script>
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-brand">
@@ -54,7 +62,7 @@
                     <div class="body">
                         <h3><?php echo htmlspecialchars($product['nom']); ?></h3>
                         <p><?php echo htmlspecialchars($product['description']); ?></p>
-                        <div class="landing-price">À partir de <?php echo number_format($product['prix_m'], 2); ?> €</div>
+                        <div class="landing-price">À partir de <?php echo number_format($product['prix_m'], 2); ?> TND</div>
                         <a href="/ProjetPizza2/index.php?url=menu" class="btn btn-primary btn-block">Commander</a>
                     </div>
                 </article>
@@ -105,6 +113,16 @@
                 }, 60 + i * 45);
             });
         });
+        
+        // Afficher les alertes système
+        <?php 
+        if (isset($_SESSION['success_message'])) {
+        ?>
+                window.showSuccess('<?php echo addslashes($_SESSION['success_message']); ?>', 5000);
+        <?php 
+            unset($_SESSION['success_message']); // Vider après affichage
+        }
+        ?>
     </script>
 </body>
 </html>

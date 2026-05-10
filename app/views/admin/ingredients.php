@@ -16,7 +16,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="prix_supplementaire">Prix supplémentaire (€)</label>
+                            <label for="prix_supplementaire">Prix supplémentaire (TND)</label>
                             <input type="number" id="prix_supplementaire" name="prix_supplementaire" step="0.01" min="0" value="0.00">
                         </div>
                         
@@ -54,7 +54,7 @@
                                     </td>
                                     <td>
                                         <?php if ($ingredient['prix_supplementaire'] > 0): ?>
-                                            <span class="price">+<?php echo number_format($ingredient['prix_supplementaire'], 2); ?> €</span>
+                                            <span class="price">+<?php echo number_format($ingredient['prix_supplementaire'], 2); ?> TND</span>
                                         <?php else: ?>
                                             <span class="price">Gratuit</span>
                                         <?php endif; ?>

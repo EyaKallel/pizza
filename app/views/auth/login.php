@@ -1,3 +1,9 @@
+<?php
+// Appeler Database pour démarrer les sessions automatiquement
+require_once 'config/database.php';
+$database = new Database();
+$db = $database->getConnection();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,6 +13,8 @@
     <link rel="stylesheet" href="/ProjetPizza2/public/css/modern-pizza.css">
 </head>
 <body>
+    <!-- Système d'alertes Smart Pizzeria -->
+    <script src="/ProjetPizza2/public/js/alerts.js"></script>
     <section class="welcome-section">
         <div class="welcome-container">
             <div class="welcome-info">
@@ -30,6 +38,27 @@
                     <?php if (isset($error)): ?>
                         <div class="error"><?php echo $error; ?></div>
                     <?php endif; ?>
+                    
+                    <?php if (isset($_SESSION['logout_message'])): ?>
+                        <div class="success"><?php echo $_SESSION['logout_message']; unset($_SESSION['logout_message']); ?></div>
+                    <?php endif; ?>
+                    
+                    <!-- Alertes système -->
+                    <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        <?php 
+                        // Récupérer les alertes depuis la session
+                        if (isset($_SESSION['alerts']) && !empty($_SESSION['alerts'])) {
+                            foreach ($_SESSION['alerts'] as $alert): 
+                        ?>
+                                window.showAlert('<?php echo addslashes($alert['message']); ?>', '<?php echo $alert['type']; ?>', 5000);
+                        <?php 
+                            endforeach;
+                            unset($_SESSION['alerts']); // Vider après affichage
+                        }
+                        ?>
+                    });
+                    </script>
 
                     <form action="/ProjetPizza2/index.php?url=auth/login" method="POST">
                         <div class="form-group">

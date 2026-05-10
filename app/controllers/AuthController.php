@@ -1,8 +1,12 @@
 <?php
+// Appeler Database pour démarrer les sessions automatiquement
+require_once 'config/database.php';
+$database = new Database();
+$db = $database->getConnection();
+
 class AuthController extends Controller {
     
     public function index() {
-        // Rediriger vers la page de login par défaut
         $this->redirect('auth/login');
     }
     
@@ -15,11 +19,14 @@ class AuthController extends Controller {
             $user->email = $_POST['email'];
             $user->mot_de_passe = $_POST['mot_de_passe'];
             $user->telephone = isset($_POST['telephone']) ? $_POST['telephone'] : '';
-            $user->role = 'client'; // Rôle par défaut pour les nouveaux inscrits
+            
+            if (!empty($user->telephone) && !$this->validateTunisianPhone($user->telephone)) {
+                $this->view('auth/register', ['error' => "Le numéro de téléphone doit contenir exactement 8 chiffres"]);
+                return;
+            }
             
             if ($user->emailExists()) {
-                $error = "Cet email est déjà utilisé";
-                $this->view('auth/register', ['error' => $error]);
+                $this->view('auth/register', ['error' => "Cet email est déjà utilisé"]);
                 return;
             }
             
@@ -31,25 +38,23 @@ class AuthController extends Controller {
                 $_SESSION['role'] = 'client';
                 $this->redirect('home');
             } else {
-                $error = "Erreur lors de l'inscription";
-                $this->view('auth/register', ['error' => $error]);
+                $this->view('auth/register', ['error' => "Erreur lors de l'inscription"]);
             }
         } else {
             $this->view('auth/register');
         }
     }
     
+    private function validateTunisianPhone($phone) {
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+        return strlen($phone) === 8 && ctype_digit($phone);
+    }
+    
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $user = $this->model('User');
-            
             $user->email = $_POST['email'];
             $user->mot_de_passe = $_POST['password'];
-            
-            // Debug - afficher les valeurs
-            error_log("Email: " . $_POST['email']);
-            error_log("Password: " . $_POST['password']);
-            error_log("MD5 Password: " . md5($_POST['password']));
             
             if ($user->login()) {
                 $_SESSION['user_id'] = $user->id;
@@ -58,15 +63,13 @@ class AuthController extends Controller {
                 $_SESSION['prenom'] = $user->prenom;
                 $_SESSION['role'] = $user->role;
                 
-                // Redirection selon le rôle
                 if ($user->role === 'admin') {
                     $this->redirect('admin');
                 } else {
                     $this->redirect('home');
                 }
             } else {
-                $error = "Email ou mot de passe incorrect";
-                $this->view('auth/login', ['error' => $error]);
+                $this->view('auth/login', ['error' => "Email ou mot de passe incorrect"]);
             }
         } else {
             $this->view('auth/login');

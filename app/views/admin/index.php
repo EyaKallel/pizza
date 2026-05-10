@@ -45,7 +45,7 @@
                 <div class="stat-card">
                     <div class="stat-icon">💰</div>
                     <div class="stat-info">
-                        <h3><?php echo number_format($stats['revenue'] ?? 0, 2); ?> €</h3>
+                        <h3><?php echo number_format($stats['revenue'] ?? 0, 2); ?> TND</h3>
                         <p>Chiffre d'affaires</p>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                                     <td>#<?php echo $order['id']; ?></td>
                                     <td><?php echo $order['first_name'] . ' ' . $order['last_name']; ?></td>
                                     <td><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td>
-                                    <td><?php echo number_format($order['total_amount'], 2); ?> €</td>
+                                    <td><?php echo number_format($order['total_amount'], 2); ?> TND</td>
                                     <td>
                                         <span class="status-badge status-<?php echo $order['status']; ?>">
                                             <?php 
