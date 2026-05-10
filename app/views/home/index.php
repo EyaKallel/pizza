@@ -49,7 +49,32 @@
             <?php foreach ($featured_products as $product): ?>
                 <article class="landing-product-card">
                     <div class="thumb">
-                        <img src="/ProjetPizza2/public/images/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['nom']); ?>">
+                        <?php
+                            $rawImage = (string) ($product['image'] ?? '');
+                            $productName = (string) ($product['nom'] ?? '');
+                            $publicImage = 'pizza-placeholder.png';
+
+                            $imageDir = realpath(__DIR__ . '/../../../public/images');
+                            $imagePath = $imageDir && $rawImage !== '' ? $imageDir . DIRECTORY_SEPARATOR . $rawImage : null;
+                            
+                            if ($imagePath && is_file($imagePath)) {
+                                $publicImage = $rawImage;
+                            } else {
+                                $n = strtolower($productName);
+                                if (strpos($n, 'pepperoni') !== false) {
+                                    $publicImage = 'Pepperoni.jpg';
+                                } elseif (strpos($n, 'margherita') !== false || strpos($n, 'margarita') !== false) {
+                                    $publicImage = 'margherita.webp';
+                                } elseif (strpos($n, 'fromage') !== false) {
+                                    $publicImage = '4 fromage.jpg';
+                                } elseif (strpos($n, 'thon') !== false || strpos($n, 'oignon') !== false) {
+                                    $publicImage = 'Thon Oignons.jpg';
+                                } elseif (strpos($n, 'vég') !== false || strpos($n, 'veg') !== false || strpos($n, 'végétar') !== false || strpos($n, 'vegetar') !== false) {
+                                    $publicImage = 'Végétarienne.jpg';
+                                }
+                            }
+                        ?>
+                        <img src="/ProjetPizza2/public/images/<?php echo rawurlencode($publicImage); ?>" alt="<?php echo htmlspecialchars($productName, ENT_QUOTES, 'UTF-8'); ?>" onerror="this.onerror=null;this.src='/ProjetPizza2/public/images/pizza-placeholder.png';">
                     </div>
                     <div class="body">
                         <h3><?php echo htmlspecialchars($product['nom']); ?></h3>

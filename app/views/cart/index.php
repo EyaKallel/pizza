@@ -65,7 +65,7 @@
                         <?php foreach ($cart_items as $item_id => $item): ?>
                             <div class="cart-item" data-item-id="<?php echo $item_id; ?>">
                                 <div class="item-image">
-                                    <img src="/ProjetPizza2/public/images/<?php echo $item['image']; ?>" alt="<?php echo $item['name']; ?>">
+                                    <img src="/ProjetPizza2/public/images/<?php echo rawurlencode((string) ($item['image'] ?? '')); ?>" alt="<?php echo htmlspecialchars((string) ($item['name'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" onerror="this.onerror=null;this.src='/ProjetPizza2/public/images/pizza-placeholder.png';">
                                 </div>
                                 
                                 <div class="item-details">

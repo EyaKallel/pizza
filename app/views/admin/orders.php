@@ -44,7 +44,19 @@
                          <td><?php echo date('d/m/Y H:i', strtotime($order['date_commande'])); ?></td>
                          <td><strong><?php echo number_format($order['total'], 2); ?> €</strong></td>
                          <td>
-                             <span class="badge badge-<?php echo $order['statut'] === 'livrée' ? 'success' : ($order['statut'] === 'en_cours' ? 'warning' : ($order['statut'] === 'annulée' ? 'danger' : 'info')); ?>">
+                             <span class="badge badge-<?php 
+                            if ($order['statut'] === 'livrée') {
+                                echo 'success';
+                            } elseif ($order['statut'] === 'en_cours') {
+                                echo 'warning';
+                            } elseif ($order['statut'] === 'annulée') {
+                                echo 'danger';
+                            } elseif ($order['statut'] === 'en_attente') {
+                                echo 'info';
+                            } else {
+                                echo 'secondary';
+                            }
+                        ?>">
                                  <?php 
                                  $status_text = [
                                      'en_attente' => 'En attente',

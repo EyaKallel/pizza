@@ -123,8 +123,8 @@ INSERT INTO users (nom, prenom, email, mot_de_passe, telephone, adresse) VALUES
 ('Ben Salah', 'Mohamed', 'mohamed@gmail.com', MD5('client123'), '22334455', 'Rue Menzel Chaker, Sfax');
 
 INSERT INTO produits (nom, description, prix_s, prix_m, prix_l, image, categorie_id) VALUES
-('Margherita',   'Tomate, Mozzarella, Basilic',                8.00,  11.00, 14.00, 'margherita.jpg', 1),
-('4 Fromages',   'Mozzarella, Gorgonzola, Emmental, Parmesan', 10.00, 13.50, 17.00, '4fromages.jpg',  1),
-('Végétarienne', 'Poivrons, Champignons, Oignons, Tomates',    9.00,  12.00, 15.00, 'vege.jpg',       2),
-('Pepperoni',    'Tomate, Mozzarella, Pepperoni',              10.50, 14.00, 18.00, 'pepperoni.jpg',  3),
-('Thon Oignons', 'Thon, Oignons, Olives, Mozzarella',         10.00, 13.00, 16.50, 'thon.jpg',       3);
+('Margherita',   'Tomate, Mozzarella, Basilic',                8.00,  11.00, 14.00, 'margherita.webp', 1),
+('4 Fromages',   'Mozzarella, Gorgonzola, Emmental, Parmesan', 10.00, 13.50, 17.00, '4 fromage.jpg',  1),
+('Végétarienne', 'Poivrons, Champignons, Oignons, Tomates',    9.00,  12.00, 15.00, 'Végétarienne.jpg',       2),
+('Pepperoni',    'Tomate, Mozzarella, Pepperoni',              10.50, 14.00, 18.00, 'Pepperoni.jpg',  3),
+('Thon Oignons', 'Thon, Oignons, Olives, Mozzarella',         10.00, 13.00, 16.50, 'Thon Oignons.jpg',       3);
