@@ -24,7 +24,6 @@
                     <li><a href="/ProjetPizza2/index.php?url=admin/orders" class="<?php echo $active_page === 'orders' ? 'active' : ''; ?>">Commandes</a></li>
                     <li><a href="/ProjetPizza2/index.php?url=admin/products" class="<?php echo $active_page === 'products' ? 'active' : ''; ?>">Produits</a></li>
                     <li><a href="/ProjetPizza2/index.php?url=admin/ingredients" class="<?php echo $active_page === 'ingredients' ? 'active' : ''; ?>">Ingrédients</a></li>
-                    <li><a href="/ProjetPizza2/index.php?url=admin/users" class="<?php echo $active_page === 'users' ? 'active' : ''; ?>">Utilisateurs</a></li>
                 </ul>
             </nav>
         </aside>

@@ -60,7 +60,7 @@ $db = $database->getConnection();
                     });
                     </script>
 
-                    <form action="/ProjetPizza2/index.php?url=auth/login" method="POST">
+                    <form id="loginForm" action="/ProjetPizza2/index.php?url=auth/login" method="POST" autocomplete="off">
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" id="email" name="email" placeholder="votre@email.com" required>
@@ -81,5 +81,24 @@ $db = $database->getConnection();
             </div>
         </div>
     </section>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginForm = document.getElementById('loginForm');
+        
+        // Reset le formulaire à chaque fois que la page est affichée (même via bouton retour)
+        window.addEventListener('pageshow', function(event) {
+            if (loginForm) {
+                loginForm.reset();
+            }
+        });
+
+        // Focus automatique sur l'email
+        const emailInput = document.getElementById('email');
+        if (emailInput) {
+            emailInput.focus();
+        }
+    });
+    </script>
 </body>
 </html>

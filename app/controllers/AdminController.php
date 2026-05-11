@@ -25,9 +25,11 @@ class AdminController extends Controller {
     public function orders() {
         $order = $this->model('Order');
         $orders = $this->getAllOrders();
+        $stats = $this->getStats();
         
         $this->view('admin/orders', [
             'orders' => $orders,
+            'stats' => $stats,
             'user_logged_in' => $this->isLoggedIn()
         ]);
     }
