@@ -76,19 +76,23 @@
                                     <?php if ($item['is_custom']): ?>
                                         <div class="custom-details">
                                             <?php if (isset($item['size'])): ?>
-                                                <p>Taille: <?php echo $item['size']['name']; ?></p>
+                                                <p>Taille: <?php echo htmlspecialchars($item['size']['name'] ?? $item['size'] ?? 'N/A'); ?></p>
                                             <?php endif; ?>
                                             <?php if (isset($item['dough'])): ?>
-                                                <p>Pâte: <?php echo $item['dough']['name']; ?></p>
+                                                <p>Pâte: <?php echo htmlspecialchars($item['dough']['name'] ?? $item['dough'] ?? 'N/A'); ?></p>
                                             <?php endif; ?>
                                             <?php if (isset($item['ingredients']) && !empty($item['ingredients'])): ?>
                                                 <p>Ingrédients: 
                                                     <?php 
                                                     $ingredient_names = [];
                                                     foreach ($item['ingredients'] as $ing) {
-                                                        $ingredient_names[] = $ing['name'];
+                                                        if (is_array($ing)) {
+                                                            $ingredient_names[] = $ing['name'] ?? $ing['nom'] ?? 'Inconnu';
+                                                        } else {
+                                                            $ingredient_names[] = $ing;
+                                                        }
                                                     }
-                                                    echo implode(', ', $ingredient_names);
+                                                    echo htmlspecialchars(implode(', ', $ingredient_names));
                                                     ?>
                                                 </p>
                                             <?php endif; ?>

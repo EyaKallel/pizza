@@ -1,8 +1,46 @@
 <?php ob_start(); ?>
 <div class="page-header">
-    <h1 class="page-title">Gestion des Commandes</h1>
-    <p class="page-description">Consultez et gérez toutes les commandes des clients</p>
+    <div class="header-content">
+        <h1 class="page-title">Gestion des Commandes</h1>
+        <p class="page-description">Consultez et gérez toutes les commandes des clients</p>
+    </div>
 </div>
+
+<?php if (isset($stats)): ?>
+<div class="admin-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid var(--primary-color);">
+        <div class="stat-icon" style="font-size: 2rem; margin-bottom: 0.5rem;">📦</div>
+        <div class="stat-info">
+            <span style="color: var(--text-light); font-size: 0.9rem; font-weight: 500;">Total Commandes</span>
+            <h3 style="font-size: 1.8rem; margin: 0; color: var(--text-dark);"><?php echo $stats['total_orders'] ?? 0; ?></h3>
+        </div>
+    </div>
+    
+    <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #f1c40f;">
+        <div class="stat-icon" style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+        <div class="stat-info">
+            <span style="color: var(--text-light); font-size: 0.9rem; font-weight: 500;">En attente</span>
+            <h3 style="font-size: 1.8rem; margin: 0; color: var(--text-dark);"><?php echo $stats['pending_orders'] ?? 0; ?></h3>
+        </div>
+    </div>
+    
+    <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #2ecc71;">
+        <div class="stat-icon" style="font-size: 2rem; margin-bottom: 0.5rem;">🍕</div>
+        <div class="stat-info">
+            <span style="color: var(--text-light); font-size: 0.9rem; font-weight: 500;">Produits</span>
+            <h3 style="font-size: 1.8rem; margin: 0; color: var(--text-dark);"><?php echo $stats['total_products'] ?? 0; ?></h3>
+        </div>
+    </div>
+    
+    <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 5px solid #3498db;">
+        <div class="stat-icon" style="font-size: 2rem; margin-bottom: 0.5rem;">👥</div>
+        <div class="stat-info">
+            <span style="color: var(--text-light); font-size: 0.9rem; font-weight: 500;">Utilisateurs</span>
+            <h3 style="font-size: 1.8rem; margin: 0; color: var(--text-dark);"><?php echo $stats['total_users'] ?? 0; ?></h3>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 
 <div class="table-container">
     <div class="table-header">
