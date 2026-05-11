@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/ProjetPizza2/public/css/admin-professional.css">
 </head>
+
 <body class="admin-body-wow">
     <div class="admin-layout">
         <!-- Sidebar -->

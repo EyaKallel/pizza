@@ -22,7 +22,7 @@ class User {
                       telephone=:telephone, adresse=:adresse, role='client'";
 
         $stmt = $this->conn->prepare($query);
-
+        //nettoie les donnes
         $this->nom = htmlspecialchars(strip_tags($this->nom));
         $this->prenom = htmlspecialchars(strip_tags($this->prenom));
         $this->email = htmlspecialchars(strip_tags($this->email));
