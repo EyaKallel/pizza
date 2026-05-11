@@ -94,11 +94,10 @@
                                                     <button class="btn btn-sm btn-success unblock-user" data-user-id="<?php echo $user['id']; ?>">
                                                         ✅ Débloquer
                                                     </button>
-                                                    <?php if (($user['blocked'] ?? 0) == 0): ?>
-                                                    <button class="btn btn-sm btn-danger delete-user" data-user-id="<?php echo $user['id']; ?>">
-                                                        ❌ Supprimer
-                                                    </button>
                                                 <?php endif; ?>
+                                                <button class="btn btn-sm btn-danger delete-user" data-user-id="<?php echo $user['id']; ?>">
+                                                    ❌ Supprimer
+                                                </button>
                                             <?php endif; ?>
                                         </div>
                                     </td>

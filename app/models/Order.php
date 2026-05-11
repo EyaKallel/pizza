@@ -22,10 +22,12 @@ class Order {
         $this->conn = $db;
     }
 
+    //verifie si les colonnes existent
     private function loadColumnCache(): void {
         if (self::$hasColCommandes !== null) {
             return;
         }
+        //stocker les colonnes
         self::$hasColCommandes = [];
         self::$hasColDetails = [];
         $stmt = $this->conn->query('SHOW COLUMNS FROM `' . $this->table_commandes . '`');
@@ -37,7 +39,7 @@ class Order {
             self::$hasColDetails[$row['Field']] = true;
         }
     }
-
+    
     private function commandesHas(string $col): bool {
         $this->loadColumnCache();
         return !empty(self::$hasColCommandes[$col]);
@@ -53,6 +55,7 @@ class Order {
      *
      * @param array<string, mixed> $item
      */
+    //determiner la taille (small, medium, large) d'un item du panier en fonction de ses propriétés
     private function cartItemTaille(array $item): string {
         if (!empty($item['size']) && is_string($item['size']) && preg_match('/^[SML]$/', $item['size'])) {
             return $item['size'];
@@ -72,6 +75,8 @@ class Order {
         return 'M';
     }
 
+    //creer commandee
+    //bind value matestanesh execute besh yakraha , tkra  whdha
     public function create() {
         $this->loadColumnCache();
 
@@ -124,6 +129,7 @@ class Order {
     /**
      * @param array<string|int, array<string, mixed>> $cart_items
      */
+    //ajouter les produits d'une commande dans table commande detail
     public function addOrderItems($order_id, $cart_items) {
         $this->loadColumnCache();
         $hasPrix = $this->detailsHas('prix_unitaire');
@@ -163,6 +169,7 @@ class Order {
         return true;
     }
 
+    //les commandes d'un users
     public function getUserOrders($user_id) {
         $this->loadColumnCache();
         $t = $this->table_details;
@@ -196,6 +203,7 @@ class Order {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    //les détails d'une commande (avec une fetch)
     public function getOrderDetails($order_id) {
         $query = "SELECT o.*, u.nom, u.prenom, u.email
                   FROM {$this->table_commandes} o

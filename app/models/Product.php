@@ -17,10 +17,7 @@ class Product {
         $this->conn = $db;
     }
 
-    /**
-     * Base europe (database_final.sql) : prix_s, prix_m, prix_l
-     * Base Tunisie (database_tunisia.sql) : prix_small, prix_medium, prix_large
-     */
+  
     private function normalizePrices(?array $row): ?array {
         if ($row === null || $row === false) {
             return null;
@@ -57,6 +54,8 @@ class Product {
         return $this->normalizeRows($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
+    //fetch lit les données retourné par la base 
+    //bind param envoie des valeurs à la base de données 
     public function getById($id) {
         $query = "SELECT p.*, c.nom as category_name 
                   FROM " . $this->table_name . " p

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="/ProjetPizza2/public/css/modern-pizza.css">
     <link rel="stylesheet" href="/ProjetPizza2/public/css/client-site.css">
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar">
@@ -52,21 +54,24 @@
                         </h2>
                         <div class="size-options">
                             <div class="size-option">
-                                <input type="radio" name="size_id" id="size_small" value="S" data-multiplier="1" style="display: none;">
+                                <input type="radio" name="size_id" id="size_small" value="S" data-multiplier="1"
+                                    style="display: none;">
                                 <label for="size_small" style="cursor: pointer; display: block;">
                                     <div class="size-name">Petite</div>
                                     <div class="size-price">5.00 TND</div>
                                 </label>
                             </div>
                             <div class="size-option">
-                                <input type="radio" name="size_id" id="size_medium" value="M" data-multiplier="1.3" style="display: none;">
+                                <input type="radio" name="size_id" id="size_medium" value="M" data-multiplier="1.3"
+                                    style="display: none;">
                                 <label for="size_medium" style="cursor: pointer; display: block;">
                                     <div class="size-name">Moyenne</div>
                                     <div class="size-price">6.50 TND</div>
                                 </label>
                             </div>
                             <div class="size-option">
-                                <input type="radio" name="size_id" id="size_large" value="L" data-multiplier="1.6" style="display: none;">
+                                <input type="radio" name="size_id" id="size_large" value="L" data-multiplier="1.6"
+                                    style="display: none;">
                                 <label for="size_large" style="cursor: pointer; display: block;">
                                     <div class="size-name">Grande</div>
                                     <div class="size-price">8.00 TND</div>
@@ -82,34 +87,19 @@
                             Choisissez le type de pâte
                         </h2>
                         <div class="grid grid-2">
-                            <div class="card">
-                                <input type="radio" name="dough_id" id="dough_fine" value="1" data-price="1.0" style="display: none;">
-                                <label for="dough_fine" style="cursor: pointer; display: block;">
-                                    <div style="font-weight: 600; color: var(--text-dark);">Pâte Fine</div>
-                                    <div style="color: var(--accent-color); font-weight: 600;">+1.00 TND</div>
-                                </label>
-                            </div>
-                            <div class="card">
-                                <input type="radio" name="dough_id" id="dough_thick" value="2" data-price="1.2" style="display: none;">
-                                <label for="dough_thick" style="cursor: pointer; display: block;">
-                                    <div style="font-weight: 600; color: var(--text-dark);">Pâte Épaisse</div>
-                                    <div style="color: var(--accent-color); font-weight: 600;">+1.20 TND</div>
-                                </label>
-                            </div>
-                            <div class="card">
-                                <input type="radio" name="dough_id" id="dough_cheese" value="3" data-price="1.3" style="display: none;">
-                                <label for="dough_cheese" style="cursor: pointer; display: block;">
-                                    <div style="font-weight: 600; color: var(--text-dark);">Pâte à Fromage</div>
-                                    <div style="color: var(--accent-color); font-weight: 600;">+1.30 TND</div>
-                                </label>
-                            </div>
-                            <div class="card">
-                                <input type="radio" name="dough_id" id="dough_complete" value="4" data-price="1.1" style="display: none;">
-                                <label for="dough_complete" style="cursor: pointer; display: block;">
-                                    <div style="font-weight: 600; color: var(--text-dark);">Pâte Complète</div>
-                                    <div style="color: var(--accent-color); font-weight: 600;">+1.10 TND</div>
-                                </label>
-                            </div>
+                            <?php foreach ($doughs as $dough): ?>
+                                <div class="card">
+                                    <input type="radio" name="dough_id" id="dough_<?php echo $dough['id']; ?>"
+                                        value="<?php echo $dough['id']; ?>"
+                                        data-price="<?php echo $dough['price_modifier']; ?>" style="display: none;">
+                                    <label for="dough_<?php echo $dough['id']; ?>" style="cursor: pointer; display: block;">
+                                        <div style="font-weight: 600; color: var(--text-dark);">
+                                            <?php echo htmlspecialchars($dough['name']); ?></div>
+                                        <div style="color: var(--accent-color); font-weight: 600;">
+                                            +<?php echo number_format($dough['price_modifier'], 2); ?> TND</div>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
                     </div>
 
@@ -122,13 +112,16 @@
                         <div class="ingredients-grid">
                             <?php foreach ($ingredients as $ingredient): ?>
                                 <div class="ingredient-card">
-                                    <input type="checkbox" name="ingredients[]" id="ing_<?php echo $ingredient['id']; ?>" 
-                                           value="<?php echo $ingredient['id']; ?>"
-                                           data-price="<?php echo $ingredient['prix_supplementaire']; ?>"
-                                           style="display: none;">
-                                    <label for="ing_<?php echo $ingredient['id']; ?>" style="cursor: pointer; display: block;">
-                                        <div class="ingredient-name"><?php echo htmlspecialchars($ingredient['nom']); ?></div>
-                                        <div class="ingredient-price">+<?php echo number_format($ingredient['prix_supplementaire'], 2); ?> TND</div>
+                                    <input type="checkbox" name="ingredients[]" id="ing_<?php echo $ingredient['id']; ?>"
+                                        value="<?php echo $ingredient['id']; ?>"
+                                        data-price="<?php echo $ingredient['prix_supplementaire']; ?>"
+                                        style="display: none;">
+                                    <label for="ing_<?php echo $ingredient['id']; ?>"
+                                        style="cursor: pointer; display: block;">
+                                        <div class="ingredient-name"><?php echo htmlspecialchars($ingredient['nom']); ?>
+                                        </div>
+                                        <div class="ingredient-price">
+                                            +<?php echo number_format($ingredient['prix_supplementaire'], 2); ?> TND</div>
                                     </label>
                                 </div>
                             <?php endforeach; ?>
@@ -221,10 +214,10 @@
 
     <!-- JavaScript professionnel -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Gestion des tailles
             document.querySelectorAll('.size-option').forEach(option => {
-                option.addEventListener('click', function() {
+                option.addEventListener('click', function () {
                     document.querySelectorAll('.size-option').forEach(o => o.classList.remove('selected'));
                     this.classList.add('selected');
                     updatePreview();
@@ -233,14 +226,14 @@
 
             // Gestion des pâtes
             document.querySelectorAll('input[name="dough_id"]').forEach(input => {
-                input.addEventListener('change', function() {
+                input.addEventListener('change', function () {
                     updatePreview();
                 });
             });
 
             // Gestion des ingrédients
             document.querySelectorAll('.ingredient-card').forEach(card => {
-                card.addEventListener('click', function() {
+                card.addEventListener('click', function () {
                     const checkbox = this.querySelector('input[type="checkbox"]');
                     checkbox.checked = !checkbox.checked;
                     this.classList.toggle('selected');
@@ -257,7 +250,7 @@
             function addToCart() {
                 const sizeInput = document.querySelector('input[name="size_id"]:checked');
                 const doughInput = document.querySelector('input[name="dough_id"]:checked');
-                
+
                 if (!sizeInput) {
                     alert('Veuillez sélectionner une taille');
                     return;
@@ -268,26 +261,26 @@
                 }
 
                 const formData = new FormData(document.getElementById('pizza-composer-form'));
-                
+
                 fetch('/ProjetPizza2/index.php?url=composer/addToCart', {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Pizza ajoutée au panier!');
-                        window.location.href = '/ProjetPizza2/index.php?url=cart';
-                    } else if (data.error) {
-                        alert(data.error);
-                    } else {
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Pizza ajoutée au panier!');
+                            window.location.href = '/ProjetPizza2/index.php?url=cart';
+                        } else if (data.error) {
+                            alert(data.error);
+                        } else {
+                            alert('Erreur lors de l\'ajout au panier');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         alert('Erreur lors de l\'ajout au panier');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Erreur lors de l\'ajout au panier');
-                });
+                    });
             }
 
             function updatePreview() {
@@ -331,10 +324,11 @@
                 document.getElementById('preview-ingredients').textContent = ingredientNames.length > 0 ? ingredientNames.join(', ') : 'Aucun';
                 document.getElementById('total-price').textContent = totalPrice.toFixed(2) + ' TND';
             }
-            
+
             // Prix de base = 5.00 TND
             updatePreview();
         });
     </script>
 </body>
+
 </html>
